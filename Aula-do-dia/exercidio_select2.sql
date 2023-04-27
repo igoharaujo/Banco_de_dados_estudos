@@ -1,27 +1,28 @@
-/*Busque a data de nascimento mais antiga.
+/*9-Busque a data de nascimento mais antiga.
 
-Busque a media de duração dos discos
+10- Busque a media de duração dos discos
 
-Busque a menor musica
+11- Busque a menor musica
 
-Indique quantas musicas possuem a mesma duração ordenado pela maior
+12- Indique quantas musicas possuem a mesma duração ordenado pela maior
 
-indique quantos discos foram lançados no mesmo ano ordenado pelo que tem mais
+13- indique quantos discos foram lançados no mesmo ano ordenado pelo que tem mais
 
-indique quantas vezes cada musica se repete ordenado em de forma alfabética e numérica de quantidade
+14- indique quantas vezes cada musica se repete ordenado em de forma alfabética e numérica de quantidade
 
-indique quantos artistas nasceram no mesmo dia ordenado por data crescente e quantidade decrescente, porem somente das datas que tiverem pelo menos 2 artistas e faça isso para as datas de 1890 a 2023
+15- indique quantos artistas nasceram no mesmo dia ordenado por data crescente e quantidade decrescente, porem somente das datas que tiverem pelo menos 2 artistas e faça isso para as datas de 1890 a 2023
+
 busque o maior id de gravadoras
 
-busque o maior id de musica
+16- busque o maior id de musica
 
-busque o maior id de disco
+17 - busque o maior id de disco
 
-deseja-se saber quantos discas cada gravadora possue
+18- deseja-se saber quantos discas cada gravadora possue
 
-deseja-se saber quantos discos são de cada genero
+10- deseja-se saber quantos discos são de cada genero
 
-deseja-se saber quantos discos cada gênero possui, porém somente dos que vieram do ano 2000 pra frente e dos que possuírem mais que um disco*/
+11- deseja-se saber quantos discos cada gênero possui, porém somente dos que vieram do ano 2000 pra frente e dos que possuírem mais que um disco*/
 
 
 
@@ -62,8 +63,43 @@ SELECT ano_lancamento, COUNT(ano_lancamento) AS qtd_disco FROM tb_disco
 WHERE ano_lancamento BETWEEN 2010 AND 2020
 GROUP BY ano_lancamento;
 
+#9-Busque a data de nascimento mais antiga
+SELECT MIN(dt_nascimento) FROM tb_artista
+WHERE dt_nascimento != '000-00-00';
 
-#Busque a media de duração dos discos
+#10-Busque a media de duração dos discos
 SELECT AVG(duracao) FROM tb_disco;
 
-#Busque a menor musica
+#11- Busque a menor musica
+SELECT nome, MIN(duracao) FROM tb_musica;
+
+#12- Indique quantas musicas possuem a mesma duração ordenado pela maior
+SELECT nome , COUNT(DURACAO) FROM tb_musica
+GROUP BY duracao ORDER BY duracao;
+
+#13- indique quantos discos foram lançados no mesmo ano ordenado pelo que tem mais
+SELECT ano_lancamento, COUNT(ano_lancamento) AS ano FROM tb_disco
+GROUP BY ano_lancamento ORDER BY ano desc;
+
+
+#14- indique quantas vezes cada musica se repete ordenado em de forma alfabética e numérica de quantidade
+SELECT nome, COUNT(nome) AS qtd FROM tb_musica
+GROUP BY nome ORDER BY nome ASC, qtd ASC;
+
+
+#15- indique quantos artistas nasceram no mesmo dia ordenado por data crescente e quantidade decrescente, porem somente das datas que tiverem pelo menos 2 artistas e faça isso para as datas de 1890 a 2023
+SELECT nome, COUNT(dt_nascimento) AS qtd FROM tb_artista
+WHERE dt_nascimento BETWEEN '1890-01-01' AND '2023-04-26'
+GROUP BY dt_nascimento
+having dt_nascimento >= 2 ORDER BY dt_nascimento asc, qtd desc;
+
+#16- busque o maior id de musica
+select max(id) from tb_musica;
+
+#17 - busque o maior id de disco
+select max(id) from tb_disco;
+
+#8- deseja-se saber quantos discas cada gravadora possue
+select id_gravadora, count(id_gravadora) AS discos_por_gravadora
+from tb_disco
+group by id_gravadora;
