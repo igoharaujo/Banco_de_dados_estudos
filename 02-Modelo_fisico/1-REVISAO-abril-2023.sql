@@ -1,7 +1,8 @@
 -- AULA 1 - CRIANDO BASE DE DADOS E TABELAS
 
 CREATE DATABASE IF NOT EXISTS db_game # CREATE DATABASE: cria uma base de dados, 
-									  # IF NOT EXISTS: esse comando impede a criação de outra base de dados com o mesmo nome.
+	
+								  # IF NOT EXISTS: esse comando impede a criação de outra base de dados com o mesmo nome.
 COLLATE utf8mb4_general_ci # COLLATE: comando para puxar o padrão da linguagem
 CHARSET utf8mb4; #CHARSER: é usado para especificar o conjunto de caracteres que será utilizado, que fui puxado pelo collate.
 
@@ -101,7 +102,7 @@ SELECT * FROM tb_jogo_console;
  DROP COLUMN lancamento; #usamos o comando DROP para apagar a coluna.
  # ---------------------------------------------------------------------------------------------------------------------
 
--- AULA 4 USANDO O SELECT E APRENDENDO  OS COMANDOS AS, WHERE OR AND, BETWEEN, LIKE
+-- AULA 4 USANDO O SELECT E APRENDENDO  OS COMANDOS:  AS, WHERE OR AND, BETWEEN e LIKE
 
 #SELECT 
 #01- CAMINHO TODO DO COMANDO SELECT:
@@ -180,6 +181,108 @@ WHERE nome LIKE '_a%' LIMIT 1000; # caso quisessemos que fosse mostrado o 'a' na
 								  #  para achar as ultimas finais eu faço ao contrario: 'a%__'
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- AULA 5 Aprendendo sobre MAX, AVG, MIN, COUNT e SUM
+
+
+SELECT MAX(duracao) FROM tb_disco; -- o MAX() mostrara o maximo de duração, ou seja, se a maior duração for '23:59:30' ele mostrara so essa.
+
+SELECT AVG(duracao) FROM tb_disco; -- AVG() mostrara a media
+
+SELECT MIN(duracao) FROM tb_disco; -- MIN() mostrara o minimo, ou seja, o contrario de MAX(maximo)
+
+SELECT COUNT(*) FROM tb_disco; -- é uma função que vai contar todos os valores que cada das linha da tabela tem, substituindo '*' posso contar apenas as linhas da tabelas
+
+SELECT SUM(duracao) FROM tb_disco; -- SUM() mostrara a soma
+
+# dados estatistico
+
+use db_game;
+SELECT * FROM tb_console
+where id_console = 1; -- xbox
+
+SELECT * FROM tb_jogo
+where id_jogo = 3; -- gta v
+
+SELECT DISTINCT id_jogo FROM tb_jogo_console; # Distinct fara com que não seja mostrados valores repitidos
+
+SELECT id_jogo FROM tb_jogo_console GROUP BY id_jogo; 
+-- Com o mando "GROUP BY" vai separa os grupos, caso o id_jogo = 1 repita ele vai colocar todos os id 1 dentro da coluna 1, id 2 repetido na coluna 2...
+
+SELECT id_jogo, COUNT(id_jogo) FROM tb_jogo_console GROUP BY id_jogo; 
+-- Aqui especificamos o que o COUNT vai contar, ele vai pegar o jogo e mostra em quantos consoles aquele jogo aparece
+
+SELECT ano_lancamento, count(ano_lancamento) FROM tb_disco GROUP BY ano_lancamento; 
+-- Aqui vamos mostrar a linha ano_lancamento e a quantidade de ano_lancamento da tb_disco separado por ano lancamento
+
+
+#Aqui vamos filtra os dados e depois vamos filtrar as colunas
+SELECT ano_lancamento, count(ano_lancamento) AS quantidade FROM tb_disco
+WHERE ano_lancamento BETWEEN 2000 AND 2020    #aqui vamos usar o where para filtrar o ano entre 2000 e 2020, WHERE PRECISAR SER ANTES DO GROUP BY
+GROUP BY ano_lancamento
+HAVING quantidade > 5000 order by ano_lancamento; #HAVING: filtro de grupos, so funciona dentro do GROUP BY
+
+
+# quantas musicas cada disco tem, mas so  acima de 100 musicas e abaixo de 500, ordernados de forma descrescente, so disco que são de 1000 a 1999
+SELECT id_disco, COUNT(id_disco) AS disco  FROM tb_musica
+where id_disco between 1000 and 100000
+group by id_disco
+HAVING disco between 100 AND 1000 ORDER BY disco desc;
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- 6 Hoje vamos aprender a dar o select em mais de uma tabela, os comandos: JOIN, ON,
+    
+# comando JOIN e ON
+SELECT f.nome AS filho,
+	   p.nome AS pai,
+	   f.id_pai AS tb_filho,
+       p.id AS tb_pai
+       
+FROM tb_filho AS f 
+JOIN tb_pai AS p -- O comando JOIN vai unir as tabelas, nesse caso, vai unir a tabela filho e pai.
+ON f.id_pai = p.id; -- 'ON' ele vai unir a chave prmaria com a chave estrangeira, porem so posso usar o ON para unir fk e fp
+    
+#INNER JOIN
+SELECT f.nome AS filho, m.nome AS mae
+FROM tb_filho AS F INNER JOIN tb_mae AS m -- O padrao do sistema é que toda vez que for feito um JOIN ele VAI fazer um INNER, inner é a interseccão
+ON f.id = m.id;  -- lebranddo que para o ON funciona eu tenho que colocar o a chave primaria das duas tabelas
+    
+														#RIGHT = DIREITA
+														#LEFT = ESQUERDA
+#LEFT JOIN ou RIGHT JOIN
+SELECT f.nome AS filho, m.nome AS mae
+FROM tb_filho AS F RIGHT JOIN tb_mae AS m -- O RIGHT vai pegar a coluna da direita, ou seja ele vai mostrar todas as mae, ate as que não tem filhos, 
+ON f.id = m.id; 						 -- o left vai fazer a mesma coisa, so que com os da esquerda, ou seja vai mostrar todos os filho, ate os que não tem mãe
+
+
+#full UNION join  
+-- As regras para fazer o comando `UNION` são: 1- As colunas precisam ser iguais, 2- precisam ter a mesma qtd de linha as duas, 3- Os titulos da coluna precisam ser a mesma
+#Um dos selects precisam ser left e o outro right
+SELECT f.nome AS filho, m.nome AS mae
+FROM tb_filho AS F LEFT JOIN tb_mae AS m 
+ON f.id = m.id 
+UNION    
+SELECT f.nome AS filho, m.nome AS mae
+FROM tb_filho AS F RIGHT JOIN tb_mae AS m 
+ON f.id = m.id;
+
+
+#Aqui vamos fazer com que mostre 3 tabelas
+SELECT 
+f.nome AS filho,
+m.nome AS mae,
+p.nome AS pai
+        
+FROM tb_filho AS F 
+inner JOIN    		#Aqui unimos tb_filho com tb_mae
+	 tb_mae AS m 
+     
+ON f.id = m.id 
+inner join.       	#Aqui unimos o id da tabela filho e id da tabela mae com a tb_pai.
+	tb_pai AS p;
  
 
 
