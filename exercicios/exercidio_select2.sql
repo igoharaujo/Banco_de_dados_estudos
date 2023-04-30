@@ -37,9 +37,10 @@ busque o maior id de gravadoras
 
 18- deseja-se saber quantos discas cada gravadora possue
 
-10- deseja-se saber quantos discos são de cada genero
+19- deseja-se saber quantos discos são de cada genero
 
-11- deseja-se saber quantos discos cada gênero possui, porém somente dos que vieram do ano 2000 pra frente e dos que possuírem mais que um disco*/
+20- deseja-se saber quantos discos cada gênero possui, porém somente dos que vieram do ano 2000 pra frente e dos que possuírem mais que um disco
+*/
 
 
 
@@ -116,7 +117,7 @@ select max(id) from tb_musica;
 #17 - busque o maior id de disco
 select max(id) from tb_disco;
 
-#8- deseja-se saber quantos discas cada gravadora possue
+#18- deseja-se saber quantos discas cada gravadora possue
 select id_gravadora, count(id_gravadora) AS discos_por_gravadora
 from tb_disco
 group by id_gravadora;
