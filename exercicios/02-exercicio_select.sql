@@ -1,3 +1,6 @@
+-- -----------------------------------------------
+#EXERCICIOS SELECT, COUNT, GROUP BY, MAX, MIN, AVG
+-- -----------------------------------------------
 /*
 1- Consulte apenas os nomes dos artistas que possuem 'SILVA' em qualquer qualquer lugar do nome  e que tenha idade superior a 25 e organize em ordem crescente de sobrenome.
 
@@ -28,8 +31,6 @@
 14- indique quantas vezes cada musica se repete ordenado em de forma alfabética e numérica de quantidade
 
 15- indique quantos artistas nasceram no mesmo dia ordenado por data crescente e quantidade decrescente, porem somente das datas que tiverem pelo menos 2 artistas e faça isso para as datas de 1890 a 2023
-
-busque o maior id de gravadoras
 
 16- busque o maior id de musica
 
