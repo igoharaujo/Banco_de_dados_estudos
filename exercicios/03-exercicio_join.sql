@@ -1,3 +1,5 @@
+-- --------------------------------------------------------------------------------------
+# EXERCICIOS: JOIN e COUNT
 /*
 -01 Mostre o nome do disco e da gravadora porem mostre somente aqueles que estão relacionados
 
@@ -75,7 +77,6 @@ where disco.id = 80252;*/
 select distinct disco.titulo AS disco, 
 				gravadora.nome AS gravadora, 
                 musica.nome AS musica
-                
 from tb_disco AS disco 
 INNER JOIN tb_gravadora AS gravadora 
 	on gravadora.id = disco.id_gravadora
@@ -85,10 +86,40 @@ WHERE disco.id = 80252;
 
 
 #-05 Mostre o nome de todas os discos e todas as gravadoras e dos discos mostre também o ano de lançamento.
+SELECT distinct disco.ano_lancamento AS lancamento_disco,
+		disco.titulo AS titulo,
+		gravadora.nome AS gravadora
+FROM tb_disco AS disco INNER JOIN tb_gravadora AS gravadora
+ON gravadora.id = disco.id_gravadora;
+        
+
+#-06 Mostre quantas musicas cada disco possui. E deseja-se saber também o nome do disco.
+SELECT disco.titulo, musica.id_disco AS disco, COUNT(musica.id) AS musica FROM tb_musica AS musica INNER JOIN tb_disco AS disco
+ON musica.id_disco = disco.id
+GROUP BY musica.id_disco;
+
+
+#-07 mostre o nome das musicas e o nome do disco dessas musicas
+SELECT musica.nome as musica, disco.titulo as disco FROM tb_musica AS musica INNER JOIN tb_disco AS disco
+ON musica.id_disco = disco.id;
+
+
+#-08 mostre o nome dos discos e o nome dos artista ordenado por artista, deseja-se saber todos os artistas e todos os discos
+SELECT DISTINCT artista.nome, disco.titulo FROM tb_disco AS disco INNER JOIN tb_artista AS artista
+ON artista.id = disco.id_artista ORDER BY artista.nome;
+
+
+#-09 mostre o nome do disco, da gravadora e do artista ordenado por gravadora
 
 
 
-use db_discoteca;
 
 
+
+
+
+
+
+
+#-10 mostre nome do disco, ano de lancamento, tempo, nome da gravadora e nome  completo do artista, junto a sua idade, ordenado por artista
 

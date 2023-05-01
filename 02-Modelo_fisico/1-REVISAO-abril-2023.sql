@@ -87,6 +87,9 @@ SELECT * FROM tb_jogo_console;
  ADD COLUMN ano_lancamento YEAR NOT NULL DEFAULT '2000'; /*Em seguida ultilizamos o comando ADD COLUMN e 
  o nome da nova coluna com as caracteristicas dela*/
  
+ #1.1- O comando AFTER coloca a coluna atras da coluna que especificamos
+ ALTER TABLE cursos ADD COLUMN idcurso int AFTER id; -- caso quissessemos que idcurso fosse a primeira coluna em vez do AFTER usariamos FIRST
+
  #2-AGORA VAMOS MODIFICAR A COLUNA CRIADA. OBS: MIDIFICAR A COLUNA NÃO SIGNIFICA MODIFICAR OS VALORES DA COLUNA.
  ALTER TABLE tb_jogo
  MODIFY ano_lancamento  YEAR NOT NULL; /*Aqui usei o comando MODIFY para retirar o DEFAULT "2000"
