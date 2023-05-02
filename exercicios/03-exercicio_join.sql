@@ -111,15 +111,37 @@ ON artista.id = disco.id_artista ORDER BY artista.nome;
 
 #-09 mostre o nome do disco, da gravadora e do artista ordenado por gravadora
 
-
-
-
-
-
-
-
-
+SELECT disco.titulo AS disco, gravadora.nome AS gravadora, artista.nome AS artista
+FROM tb_disco AS disco INNER JOIN tb_gravadora AS gravadora
+ON gravadora.id = disco.id_gravadora
+INNER JOIN
+tb_artista AS artista 
+ON artista.id = disco.id_artista ORDER BY gravadora.nome;
 
 
 #-10 mostre nome do disco, ano de lancamento, tempo, nome da gravadora e nome  completo do artista, junto a sua idade, ordenado por artista
+SELECT disco.titulo as disco, disco.ano_lancamento as ano_disco, disco.duracao as tempo_disco, gravadora.nome as gravadora, artista.nome as artista, artista.dt_nascimento
+FROM tb_disco as disco INNER JOIN tb_artista as artista
+on disco.id_artista = artista.id
+inner join tb_gravadora as gravadora
+on disco.id_gravadora = gravadora.id ORDER BY artista.nome; 
+
+#-11 mostre o nome do disco e todos os dados da musica, exceto fk, porem somente dos  discos 1, 10, 100, 1000, 10000, 100000  ordenado por disco.
+SELECT disco.titulo as disco, musica.id as id_musica, musica.nome as musica, musica.duracao as tempo_musica from tb_disco as disco inner join tb_musica as musica
+ON disco.id = musica.id
+where disco.id IN (1, 10, 100, 10000, 100000) ORDER BY disco.titulo;
+#-12 mostre nome da gravadora, todos os dados do artista, exceto fk, todos os dados do disco exceto fk, e todos os dados das musicas relacionados, ordenado por artista porem mostre apenas dos disco de 1000 a 15000.
+
+#-13 Mostre quantas musicas estão cadastradas.
+select id, nome from tb_musica;
+
+#-14 Mostre a maior musica.
+SELECT MAX(nome) FROM tb_musica;
+
+#-15 Mostre a menor disco.
+SELECT MIN(titulo) from tb_disco;
+
+
+
+
 
