@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS db_dataq
+COLLATE utg8mb4_general_ci
+CHARSET utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tb_usuario(
+id_usuario INT PRIMARY KEY,
+nome VARCHAR(100),
+dt_nascimento DATE
+);
+
+
+CREATE TABLE IN NOT EXISTS
