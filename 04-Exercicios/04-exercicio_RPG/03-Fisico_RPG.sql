@@ -30,8 +30,7 @@ email VARCHAR(255) NOT NULL,
 senha VARCHAR(255) NOT NULL,
 nickname VARCHAR(40) NOT NULL,
 CONSTRAINT uq_nickname UNIQUE(nickname),
-CONSTRAINT uq_email UNIQUE(email),
-CONSTRAINT ck_dt_nasciemtno CHECK(dt_nascimento != '0000-00-00')
+CONSTRAINT uq_email UNIQUE(email)
 )AUTO_INCREMENT = 1;
 
 
@@ -67,35 +66,35 @@ show tables; #para ver o nome de todos as tabelas do banco
 #--------------------------------------------------------------------------------------------------
 
 INSERT INTO tb_usuario
-(id_usuario, nome, dt_nascimento)
+(id, nome, dt_nascimento, email, senha, nickname)
 VALUES
-(1,'igor','2001-12-13'),
-(2, 'Samuel', '2001-05-13'),
-(3, 'david', '2000-02-13'),
-(4, 'gabi', '2011-02-13'),
-(5, 'giovana', '2003-7-13');
+(1,'igor','2001-12-13', 'igormanga@gmail.com','a123a', 'trevoso'),
+(2, 'Samuel', '2001-05-13', 'samuelmanga@gmail.com','b123b', 'luvoso'),
+(3, 'david', '2000-02-13', 'davidmanga@gmail.com','c123c', 'solvoso'),
+(4, 'gabi', '2011-02-13', 'gabimanga@gmail.com','d123d', 'escuvoso'),
+(5, 'giovana', '2003-7-13', 'giovannamanga@gmail.com','a23213a', 'nevoso');
 
+INSERT INTO tb_classe
+(id, nome, descricao)
+VALUES
+(1, 'Barbaro','tem os poderes do passado do vilao com um extra de alcoolismo'),
+(2, 'Monge', 'tem os jutsus do harry potter para mata os inimigo');
 
 
 INSERT INTO tb_personagem
-(id_personagem, nome, id_usuario)
+(id_personagem, nome, genero, nivel, experiencia, id_usuario, id_classe)
 VALUES
-(1, 'DeuBug', 1),
-(2, 'BitBug', 2);
+(1, 'DeuBug', 'm',1,0,1,1),
+(2, 'BitBug', 'f',1,0,1,2);
 
-INSERT INTO tb_classe
-(id_classe, nome, id_personagem)
-VALUES
-(1, 'Barbaro',1 ),
-(2, 'Monge', 2);
-
+#update tb_personagem set id_usuario = 2 where id_personagem = 2;
 
 INSERT INTO tb_habilidade
-(id_habilidade, nome)
+(id, nome, descricao)
 VALUES
-(1, 'Lança Mortal'),
-(2, 'Escudo Supremo'),
-(3, 'Recupera Vida');
+(1, 'Lança Mortal','faz mortais, corre o risco de quebra o pescoço e perder a vida'),
+(2, 'Escudo Supremo', 'O poder do escudo impenetravel, apenas o lança mortal é capaz de quebralo'),
+(3, 'Recupera Vida', 'traz a vida um personagem, mas para funcionar dez viloes precisam ser mortos');
 
 
 INSERT INTO tb_classe_habilidade
@@ -112,6 +111,8 @@ VALUES
 
 
 
-
+select usuario.nome as usuario, usuario.nickname as nickname, personagem.nome as persongem, personagem.nivel as nivel, personagem.experiencia as experiencia
+from tb_usuario as usuario left join tb_personagem as personagem
+on usuario.id = personagem.id_usuario;
 
 
