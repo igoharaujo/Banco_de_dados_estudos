@@ -1,0 +1,23 @@
+CRIAR BANCO DE DADOS SE NÃO EXISTIR db_game
+COLLATE utf8mb4_general_ci
+CHARSET utf8mb4;
+
+USE db_game;
+
+CRIAR TABELA SE NÃO EXISTIR tb_jogo (
+	 id INT CHAVE PRIMÁRIA AUTO_INCREMENT,
+nome VARCHAR(255) NÃO NULO
+)AUTO_INCREMENT = 1;
+
+CRIAR TABELA SE NÃO EXISTIR tb_console (
+	 id INT CHAVE PRIMÁRIA AUTO_INCREMENT,
+nome VARCHAR(255) NÃO NULO
+)AUTO_INCREMENT = 1;
+
+
+CRIAR TABELA SE NÃO EXISTIR tb_jogo_console (
+id_jogo INT NÃO NULO,
+id_console INT NÃO NULO,
+RESTRIÇÃO fk_id_pai CHAVE ESTRANGEIRA (id_jogo) REFERÊNCIAS tb_jogo (id),
+RESTRIÇÃO fk_id_mae CHAVE ESTRANGEIRA (id_console) REFERÊNCIAS tb_console (id)
+);
