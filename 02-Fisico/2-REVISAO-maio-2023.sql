@@ -1,9 +1,9 @@
-#--------------FUNÇÕES----------------#
+#-------------------------------------------------FUNÇÕES---------------------------------------------------#
 #-------------------------------------------------------------------------
 -- OBS: FUNÇÃO QUE CAPTURA O USUARIO E O HOST DE QUEM ESTA LOGADO NO MOMENTO
 SELECT current_user();
 #-------------------------------------------------------------------------
-
+use db_ponto;
 #FUÇÕES DE DATA
 
 -- 1- NOW(): Rertona exatamnete a hora e a data atual
@@ -52,8 +52,7 @@ SELECT nome, dt_nascimento, datediff(curdate(), dt_nascimento)/365 as idade from
 where dt_nascimento <> '0000-00-00' order by idade;
 
 -- 12- vamos aprender a mostrar a data pela padrão brasileiro
-SELECT DATE_FORMAT('1993-09-10', '%d-%m-%Y'); # %d: day, %month, %Year
-
+SELECT DATE_FORMAT('1993-09-10', '%d-%m-%Y'); # %d: day, %m: month, %Y: year
 
 -- ---------- VIEW -----------------
 #É uma tabela virtual, servi para visualizar os dados da tabela origina, para protege a tabela original
@@ -66,13 +65,60 @@ ON funcionario.id = horario.id_funcionario;
 
 select * from vw_ponto_eletronico;
 
+-- ---------------------------------------- CRIANDO FUNÇÕES ------------------------------------------------------
+
+#CRIANDO FUNÇÃO, a função sempre retorna algo, e sempre em uma celula ---------------------------------------
+use db_discoteca2;
+CREATE FUNCTION fn_soma(numero1 INT, numero2 INT) # Para criar um função colocamos o nome da função e colocamos os parametros
+												  #nesse caso a gente coloca o nome do parametro e de que tipo ela é, nesse caso é INT
+                                                  
+RETURNS INT  # Aqui falamos o que a função ira retornar, nesse caso ele vai retornar um numero INT, OBS: returns com S serve para mostrar o tipo que vai ser mostrado
+			# return sem S mostra o dado que sera mostrado na saida
+            
+-- READS SQL DATA # quando o resultado muda de acordo com os paremetros, exemplo hora
+-- DETERMINISTIC  # quando o resultado nao muda de acordo com os parametros, ou seja eu coloco (4,5) o resultado 4*5 sempre sera o mesmo, pi
+
+READS SQL DATA
+	RETURN numero1 + numero2;
+#----------------------------------------------------- DELIMITER, BEGIN, DECLARE  ----------------------------------------------------------
+-- Troca o ponto e virgula (;) parao cifrão ($$)
+DELIMITER $$ 
+CREATE FUNCTION fn_soma2 (n1 INT, n2 INT)
+RETURNS INT
+DETERMINISTIC 
+	BEGIN -- (COMEÇO) # usado para começar um sequicia de codigo
+		DECLARE soma INT;  -- DECLARE É COMO SE DECLARA VARIAVEIS NO SQL
+        SET soma = n1 + n2;
+      
+RETURN soma;
+    
+    END $$ -- (FIM)
+    DELIMITER ;
+
+select fn_soma2(2, 7);
+
+
+#----------------------------------------------------- CONCAT ----------------------------------------------------------
+#CONCAT é a junçõa de varios valores
+use db_discoteca2;
+
+SELECT nome,
+	   dt_nascimento,
+       CONCAT(nome,' - ', date_format(dt_nascimento, '%d/%m/%Y')) as 'nome e data'
+FROM tb_artista
+where dt_nascimento != '0000-00-00';
 
 
 
 
 
 
--- ---------- EXERCICIO -----------------
+
+
+
+
+
+
 
 
 
