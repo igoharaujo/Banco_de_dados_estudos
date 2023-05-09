@@ -1,20 +1,24 @@
 select fn_soma(2,3);
-
+#1 --------------------
 create function fn_mutplicacao(n1 int,  n2 int)
 returns int
 	READS SQL DATA
     RETURN n1 * n2;
+#1 --------------------
+
+#2--------------------
 
 CREATE FUNCTION fn_divisao(n1 FLOAT, n2 FLOAT )
 	RETURNS FLOAT
 READS SQL DATA
 	RETURN n1 / n2;
     
+#2--------------------
 select fn_mutplicacao(5,5);
 
 select fn_divisao(10,2);
 
-#--------------------
+#3--------------------
 
 DELIMITER $$
 CREATE FUNCTION fn_mult2(n1 INT, n2 INT)
@@ -27,8 +31,12 @@ BEGIN
 RETURN mult;
 END $$
 DELIMITER ;
+
+#3--------------------
+
 select fn_mult2(2, 2);
 
+#4--------------------
 DELIMITER $$
 CREATE FUNCTION fn_divi2(n1 FLOAT, n2 FLOAT)
 RETURNS FLOAT
@@ -41,9 +49,11 @@ BEGIN
 END $$
 DELIMITER ; 
 
+#4--------------------
 
 select fn_divi2(10, 2);
 
+#5--------------------
 
 DELIMITER $$ 
 CREATE FUNCTION IF NOT EXISTS fn_info_artista(id_artista INT)
@@ -58,18 +68,18 @@ RETURN registro;
 END $$
 DELIMITER ;
 
+#5--------------------
 
 select fn_info_artista(1);
 
-
 show create function fn_info_artista;
-
 
 select 'coração';
 
-select replace(replace('coração', 'ç', 'c'), 'ã', 'a'); #cololamos o nome no caso: coração, em seguida o que quremos altera no caso o ç e em seguida o que queremos no caso o c
+select replace(replace('coração', 'ç', 'c'), 'ã', 'a'); #cololamos o nome no caso: coração, em seguida o que quremos altera no caso o: ç e em seguida a alteração, no caso: c
 
 
+#6--------------------
 
 DELIMITER $$
 CREATE FUNCTION fn_maiuscula(texto varchar(255))
@@ -88,7 +98,8 @@ DETERMINISTIC
     END $$
 DELIMITER ;
 
-select f
+#6--------------------
+select fn_maiuscula('abcd');
 
 
 
