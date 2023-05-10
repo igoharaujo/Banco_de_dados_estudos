@@ -178,12 +178,16 @@ select fn_maiuscula('abcd');
 
 
 
+#----------------------------------------------------- SOMANDO TEMPO ---------------------------------------------------------
 
+#Para calcular horas eu preciso transformar de horas para segundo e então somar e depoois transformar em horas novamente
+SELECT TIME_TO_SEC('01:00:00');
+SELECT SEC_TO_TIME();
 
+use db_discoteca;
 
-
-
-
+SELECT SUM(time_to_sac(duracao)) FROM tb_musica
+WHERE id_disco = 8;
 
 
 

@@ -57,10 +57,10 @@ select fn_divi2(10, 2);
 
 DELIMITER $$ 
 CREATE FUNCTION IF NOT EXISTS fn_info_artista(id_artista INT)
-RETURNS VARCHAR(255)
+RETURNS VARCHAR(255) -- esse varchar indica que o a saida sera uma Strig por que a saida sera uma string
 READS SQL DATA
 BEGIN
-	DECLARE registro VARCHAR(255);
+	DECLARE registro VARCHAR(255); #Esse varchar demostra que a vaviavel é uma string por que a função concat é um string
 		SET registro = (SELECT concat('codigo artista: ', id ,' - nome ', nome ,' - Nascimento ', date_format(dt_nascimento, '%d/%m/%Y')) FROM tb_artista
         where id = id_artista and dt_nascimento != '0000-00-00');
 
