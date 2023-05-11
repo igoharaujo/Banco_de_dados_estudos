@@ -24,13 +24,14 @@ Usando o db_familia:
 
 5 - Mostre todos o nome de todos os artistas e discos, mesmo os que não possuem relacionamento.
 
-Crie uma função que deixe todos os caracteres de uma string maiusculas.
+6 - Crie uma função que deixe todos os caracteres de uma string maiusculas.
 
-Crie uma função que deixe todos os caracteres de uma string minusculas.
+7 - Crie uma função que deixe todos os caracteres de uma string minusculas.
 
-Crie uma função que ao ser chamada receba o codigo de um pai e me motra seus dados e quais são seus filhos.
+8 - Crie uma função que ao ser chamada receba o codigo de um pai e me motra seus dados e quais são seus filhos.
 
 */
+
 -- ---------------------------------------------------------------------------------------------------------------------
 #Usando o db_discoteca2:
 use db_discoteca2;
@@ -52,7 +53,6 @@ on gravadora.id = disco.id_gravadora
 group by disco.id_gravadora;
 
 select * from vw_gravadora2;
-
 
 -- 2 - vw_disco - deve conter todos os dados do disco, porem as fks devem ser substituidas pelo nome do item que a mesma representa.
 CREATE view vw_disco as
@@ -96,7 +96,6 @@ ON artista.id = disco.id_artista;
 
 -- 5 - Crie uma function que ao receber o codigo de um disco nos diga qual o tempo total desse disco Usando a tabela musica.
 
-
 DELIMITER $$
  CREATE FUNCTION IF NOT EXISTS fn_tempo(cod_disco int)
  RETURNS time
@@ -131,10 +130,12 @@ DELIMITER ;
 
 SELECT fn_info_disco(7);
 
+
 -- ---------------------------------------------------------------------------------------------------------------------
 #Usando o db_familia:
 use db_familia;
 -- ---------------------------------------------------------------------------------------------------------------------
+
 
 /*7.1 -  crie uma view que mostre o id e nome do filho, nome do pai e nome da mae, porém somente dos que estão relacionados. 
 Apos criada a view utiliezea em uma function que me premiter visualizar esses dados de um filho expecifico.*/
@@ -147,7 +148,9 @@ INNER JOIN tb_pai AS pai
 ON pai.id = filho.id_pai;
 
 select * from vw_filhos;
-#---------------------------------
+
+#---------Agora fazendo a função
+
 #OBS: para mostrar o view em uma function precisammos colocar o que queremos que seja exbido usando os apelidos que criamos no view
 DELIMITER $$
 CREATE FUNCTION IF NOT EXISTS fn_info_filhos(cod_filho INT)
@@ -194,8 +197,34 @@ select fn_pais(2);
 drop function fn_pais;
 
 
+USE db_discoteca;
+
 
 -- 9.3 - Usando o db_discoteca, crie uma view que me permita visualisar todos os dados do disco, junto ao nome da gravadora e nome do artista.
+CREATE VIEW vw_info_disco as
+SELECT 
+  di.id as id_disco
+, di.titulo as titulo_disco
+, di.duracao as duracao_disco
+, di.ano_lancamento as ano_disco
+, gra.nome as nome_gravadora
+, art.nome as nome_artista
+FROM tb_disco AS di INNER JOIN tb_gravadora AS gra
+ON gra.id = di.id_gravadora
+INNER JOIN tb_artista as art
+ON art.id = di.id_artista;
+
+select * from vw_info_disco;
+
+
+
+-- 10.4 - Ainda usando o discoteca, crie uma function que remova os acentos de qualquer letra, seja ela maiuscula ou minuscula.
+
+
+
+
+
+
 
 
 
