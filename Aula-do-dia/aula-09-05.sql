@@ -103,14 +103,42 @@ select fn_maiuscula('abcd');
 
 
 
+-- ---------------------------------------------------------------AULA 12-05 ------------------------------------------------------------------
+
+#PARA UMA TAREFA ESPECIFICA PARA RETORNAR UM VALOR, USAMOS A FUNCTION
+#PROCUDER, NÃO TEM OBRIGARIDADE DE RETURNO
+# EU SO USO O BEGIN E O END QUANDO EU VOU TER MAIS DE UM PONTO E VIRGULA
+
+DELIMITER $$
+CREATE PROCEDURE sp_pai_filho(cod_pai INT)
+BEGIN
+	SELECT  p.nome
+			,f.nome 
+        from tb_filho as f
+			inner join tb_pai as p
+			on p.id = f.id_pai
+        where p.id = cod_pai; 
+
+END $$
+
+DELIMITER ;
+
+CALL sp_pai_filho(58);
 
 
+DELIMITER $$
+CREATE PROCEDURE sp_insert_pai(nome_pai VARCHAR(255))
+BEGIN
+	INSERT INTO tb_pai (nome) VALUES (nome_pai);
+    
+
+END $$
+DELIMITER ;
 
 
+drop procedure sp_insert_pai;
+CALL sp_insert_pai('Fabricio');
 
 
-
-
-
-
-
+select nome from tb_pai
+where nome = 'Fabricio';

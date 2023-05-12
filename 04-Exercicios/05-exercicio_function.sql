@@ -141,10 +141,14 @@ use db_familia;
 Apos criada a view utiliezea em uma function que me premiter visualizar esses dados de um filho expecifico.*/
 
 CREATE VIEW vw_filhos as 
-select filho.id as id_filho, filho.nome as nome_filho, pai.nome as nome_pai , mae.nome as nome_mae
-from tb_filho as filho INNER join tb_mae as mae
+select 
+filho.id as id_filho
+, filho.nome as nome_filho
+, pai.nome as nome_pai 
+, mae.nome as nome_mae
+	from tb_filho as filho INNER join tb_mae as mae
 ON mae.id = filho.id_mae
-INNER JOIN tb_pai AS pai
+	INNER JOIN tb_pai AS pai
 ON pai.id = filho.id_pai;
 
 select * from vw_filhos;
@@ -155,7 +159,7 @@ select * from vw_filhos;
 DELIMITER $$
 CREATE FUNCTION IF NOT EXISTS fn_info_filhos(cod_filho INT)
 RETURNS varchar(255)
-deterministic 
+READS SQL DATA
 	begin
 		declare info varchar(255);
         SET info = (select concat('id filho: ', id_filho,' - nome filho: ',nome_filho, ' - nome pai: ', nome_pai,' - nome mae: ', nome_mae) from vw_filhos
@@ -166,13 +170,19 @@ deterministic
     end $$
 DELIMITER ;
 
-SELECT fn_info_filhos(19);
-
+SELECT fn_info_filhos(58);
+drop function fn_info_filhos;
 
 /*8.2 - Ainda usando o db_familia, crie uma view que mostre o id e nome dos pais, o nome do filho, desejasse visualisar todos os pais, mesmo os que não possuem filhos. 
 crie uma functions que me permita visualizar esses dados pelo nome do pai.*/
+
 CREATE VIEW vw_pais as
-select pai.id as id_pai, pai.nome as nome_pai, mae.id as id_mae, mae.nome as nome_mae, filho.nome as nome_filho 
+select pai.id as id_pai
+		, pai.nome as nome_pai
+		, mae.id as id_mae
+		, mae.nome as nome_mae
+		, filho.nome as nome_filho 
+        
 from tb_pai as pai left join tb_filho as filho
 ON pai.id = filho.id_pai
 right join tb_mae as mae
@@ -191,14 +201,59 @@ DETERMINISTIC
 	RETURN info;
 	END $$
 DELIMITER ;
-
+#
 select fn_pais(2);
 
 drop function fn_pais;
 
+#-------CORREÇÃO----------
+CREATE VIEW vw_pais2 as
+select pai.id as id_pai
+		, pai.nome as nome_pai
+		, mae.id as id_mae
+		, mae.nome as nome_mae
+		, filho.nome as nome_filho 
+        
+from tb_pai as pai left join tb_filho as filho
+ON filho.id_pai = pai.id
+LEFT join tb_mae as mae
+on filho.id_mae = mae.id
+UNION
+select pai.id as id_pai
+		, pai.nome as nome_pai
+		, mae.id as id_mae
+		, mae.nome as nome_mae
+		, filho.nome as nome_filho 
+        
+from tb_pai as pai left join tb_filho as filho
+ON filho.id_pai = pai.id
+RIGHT join tb_mae as mae
+on filho.id_mae = mae.id;
 
-USE db_discoteca;
+DELIMITER $$
+CREATE FUNCTION IF NOT EXISTS fn_pais2(cod_pai VARCHAR(255))
+RETURNS VARCHAR(255)
+READS SQL DATA
+	BEGIN
+		DECLARE info VARCHAR(255);
+        SET info = (select concat('id_pai: ', id_pai , ' | pai: ', nome_pai,' | id_mae: ', id_mae, ' | mae: ', nome_mae,' | filho: ', nome_filho) as 'informações familia'
+        from vw_pais2 
+        where nome_pai = cod_pai);
+    
+	RETURN info;
+	END $$
+DELIMITER ;
+select fn_pais2('Adrienne Pope');
 
+
+-- 7 - Crie uma função que deixe todos os caracteres de uma string minusculas.
+
+
+
+
+
+#-----------------------------------
+USE db_discoteca2;
 
 -- 9.3 - Usando o db_discoteca, crie uma view que me permita visualisar todos os dados do disco, junto ao nome da gravadora e nome do artista.
 CREATE VIEW vw_info_disco as
@@ -217,8 +272,118 @@ ON art.id = di.id_artista;
 select * from vw_info_disco;
 
 
-
 -- 10.4 - Ainda usando o discoteca, crie uma function que remova os acentos de qualquer letra, seja ela maiuscula ou minuscula.
+
+DELIMITER $$
+CREATE FUNCTION IF NOT EXISTS fn_remove_acento(texto VARCHAR(255))
+RETURNS VARCHAR(255)
+DETERMINISTIC
+BEGIN
+	SET texto = 
+    
+    
+		texto = (REPLACE(REPLACE(texto, 'Á', 'a'), 'À', 'a')),
+        texto = (REPLACE(REPLACE(texto, 'Â', 'a'), 'Ã', 'a')),
+        texto = (REPLACE(REPLACE(texto, 'Ä', 'a'), 'É', 'e')),
+        texto = (REPLACE(REPLACE(texto, 'È', 'e'), 'Ê', 'e')),
+        texto = (REPLACE(REPLACE(texto, 'Ë', 'e'), 'Í', 'i')),
+        texto = (REPLACE(REPLACE(texto, 'Ì', 'i'), 'Î', 'i')),
+        texto = (REPLACE(REPLACE(texto, 'Ï', 'i'), 'Ó', 'o')),
+        texto = (REPLACE(REPLACE(texto, 'Ò', 'o'), 'Ô', 'o')),
+        texto = (REPLACE(REPLACE(texto, 'Õ', 'o'), 'Ö', 'o')),
+        texto = (REPLACE(REPLACE(texto, 'Ú', 'u'), 'Ù', 'u')),
+        texto = (REPLACE(REPLACE(texto, 'Û', 'u'), 'Ü', 'u'));
+
+RETURN texto;
+END $$
+DELIMITER ;
+
+
+
+
+
+
+
+
+-- 11.5 - Mostre todos o nome de todos os artistas e discos, mesmo os que não possuem relacionamento.
+
+SELECT ar.nome as artista, di.titulo as disco 
+from tb_artista as ar left join tb_disco as di
+ON ar.id = di.id_artista
+union
+SELECT ar.nome as artista, di.titulo as disco 
+from tb_artista as ar right join tb_disco as di
+ON ar.id = di.id_artista;
+
+
+
+-- 12.6 - Crie uma função que deixe todos os caracteres de uma string maiusculas.
+DELIMITER $$
+CREATE FUNCTION IF NOT EXISTS fn_maiscula(texto VARCHAR(255))
+RETURNS VARCHAR(255)
+DETERMINISTIC
+		BEGIN
+			SET		texto = (REPLACE(REPLACE(texto, 'a', 'A'), 'b', 'B')),
+					texto =	(REPLACE(REPLACE(texto, 'c', 'C'), 'd', 'D')),
+					texto =	(REPLACE(REPLACE(texto, 'e', 'E'), 'f', 'F')),
+					texto =	(REPLACE(REPLACE(texto, 'g', 'G'), 'h', 'H')),
+					texto =	(REPLACE(REPLACE(texto, 'i', 'I'), 'j', 'J')),
+					texto =	(REPLACE(REPLACE(texto, 'k', 'K'), 'l', 'L')),
+					texto =	(REPLACE(REPLACE(texto, 'm', 'M'), 'n', 'N')),
+					texto =	(REPLACE(REPLACE(texto, 'o', 'O'), 'p', 'P')),
+					texto =	(REPLACE(REPLACE(texto, 'q', 'Q'), 'r', 'R')),
+					texto =	(REPLACE(REPLACE(texto, 's', 'S'), 't', 'T')),
+					texto =	(REPLACE(REPLACE(texto, 'u', 'U'), 'v', 'V')),
+					texto =	(REPLACE(REPLACE(texto, 'w', 'W'), 'x', 'X')),
+					texto =	(REPLACE(REPLACE(texto, 'y', 'Y'), 'z', 'Z')),
+					texto =	(REPLACE(REPLACE(texto, 'á', 'Á'), 'à', 'À')),
+					texto = (REPLACE(REPLACE(texto, 'â', 'Â'), 'ã', 'Ã')),
+					texto =	(REPLACE(REPLACE(texto, 'ä', 'Ä'), 'é', 'É')),
+					texto = (REPLACE(REPLACE(texto, 'è', 'È'), 'ê', 'Ê')),
+					texto =	(REPLACE(REPLACE(texto, 'ë', 'Ë'), 'í', 'Í')),
+					texto =	(REPLACE(REPLACE(texto, 'ì', 'Ì'), 'î', 'Î')),
+					texto =	(REPLACE(REPLACE(texto, 'ï', 'Ï'), 'ó', 'Ó')),
+					texto =	(REPLACE(REPLACE(texto, 'ò', 'Ò'), 'ô', 'Ô')),
+					texto =	(REPLACE(REPLACE(texto, 'õ', 'Õ'), 'ö', 'Ö')),
+					texto =	(REPLACE(REPLACE(texto, 'ú', 'Ú'), 'ù', 'Ù')),
+					texto = (REPLACE(REPLACE(texto, 'û', 'Û'), 'ü', 'Ü'));     
+        
+        
+        RETURN texto;
+		END $$
+DELIMITER ;
+
+select fn_maiscula('');
+
+
+
+-- 8 - Crie uma função que ao ser chamada receba o codigo de um pai e me motra seus dados e quais são seus filhos.
+DELIMITER $$
+CREATE FUNCTION IF NOT EXISTS fn_info_pai2(cod_pai INT)
+RETURNS varchar(255)
+READS SQL DATA
+	begin
+		declare info varchar(255);
+        SET info = (select concat('pai: ', p.nome,' - filho: ',f.nome) from tb_filho as f
+        inner join tb_pai as p
+        on p.id = f.id_pai
+        where p.id = cod_pai); 
+        
+    return info;
+    
+    end $$
+DELIMITER ;
+
+
+
+select fn_info_pai2(58);
+
+
+
+
+
+
+
 
 
 

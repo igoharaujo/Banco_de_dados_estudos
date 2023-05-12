@@ -286,8 +286,13 @@ inner JOIN    		#Aqui unimos tb_filho com tb_mae
 ON f.id = m.id 
 inner join.       	#Aqui unimos o id da tabela filho e id da tabela mae com a tb_pai.
 	tb_pai AS p;
+#------------------------------------------------------------------------------------------------ 
+
+select lower('VANDA');  -- TRANFORMA DE MAISCULO PARA MINISCULO
+						-- com o UPPER posso transforma de minusculo para maiusculo
+                        
+        from vw_pais2 
+        where UPPER(nome_pai) = UPPER(cod_pai)); -- Usando o UPPER eu garanto que independete se a pessoa digitar com maiscula ou miniscula ele vai me mostrar o resultado                    
+
  
-
-
-
 
