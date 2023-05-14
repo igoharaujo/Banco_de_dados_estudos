@@ -2,6 +2,7 @@
 
 CREATE DATABASE IF NOT EXISTS db_game # CREATE DATABASE: cria uma base de dados, 
 	
+
 								  # IF NOT EXISTS: esse comando impede a criação de outra base de dados com o mesmo nome.
 COLLATE utf8mb4_general_ci # COLLATE: comando para puxar o padrão da linguagem
 CHARSET utf8mb4; #CHARSER: é usado para especificar o conjunto de caracteres que será utilizado, que fui puxado pelo collate.

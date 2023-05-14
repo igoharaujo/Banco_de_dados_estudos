@@ -12,7 +12,7 @@ SELECT NOW();
 -- 2- Select curdate(): retorna apenas a data, a data atual
 SELECT CURDATE();
 
--- 3- curtime() Retorna apenas a hora
+-- 3- curtime() Retorna apenas a hora, a hora atual
 SELECT curtime();
 
 -- 4- current_timestamp(): faz a mesma coisa que o now, porem ele considera o fuso horaio
@@ -38,7 +38,7 @@ SELECT DAYNAME('1993-09-09'); #mostra o mes
 SELECT TIMEDIFF('18:17:00', '08:15:00'); #timediff mostra a diferença entre uma hora e outra
 SELECT TIMEDIFF('08:14:53', curtime()); #curtime retorna a hora atual
 
--- 10- 
+-- 10- DATEDIFF mostra a diferençã entre duas datas, curdate mostra a data atual, / 365 vai mostrar os anos
 SELECT DATEDIFF( CURDATE(),'2001-08-21')/365;
 
 -- 11- Vai calcular a diferença e entre duas datas diferentes
@@ -85,7 +85,10 @@ RETURNS INT  # Aqui falamos o que a função ira retornar, nesse caso ele vai re
 
 READS SQL DATA
 	RETURN numero1 + numero2;
-#----------------------------------------------------- DELIMITER, BEGIN, DECLARE  ----------------------------------------------------------
+#----------------------------------------------------- DELIMITER, BEGIN, DECLARE, CONCAT, REPLACE  ----------------------------------------------------------
+
+
+#--------------------------- DELIMITER ----------------------------
 
 #----------------------------------------------------------------------------------
 #Troca o ponto e virgula (;) parao cifrão ($$)									-- |
@@ -105,6 +108,19 @@ RETURN soma;																	-- |
 select fn_soma2(2, 7);															-- |
 #-----------------------------------------------------------------------------------
 
+DELIMITER $$ 
+CREATE FUNCTION IF NOT EXISTS fn_info_artista(id_artista INT)
+RETURNS VARCHAR(255) -- esse varchar indica que o a saida sera uma Strig por que a saida sera uma string
+READS SQL DATA
+BEGIN
+	DECLARE registro VARCHAR(255); #Esse varchar demostra que a vaviavel é uma string por que a função concat é um string
+		SET registro = (SELECT concat('codigo artista: ', id ,' - nome ', nome ,' - Nascimento ', date_format(dt_nascimento, '%d/%m/%Y')) FROM tb_artista
+        where id = id_artista and dt_nascimento != '0000-00-00');
+
+RETURN registro;
+END $$
+DELIMITER ;
+
 #criando uma função para fazer a multiplicação
 DELIMITER $$
 CREATE FUNCTION fn_mult2(n1 INT, n2 INT)
@@ -119,7 +135,7 @@ RETURNS INT
 DELIMITER ;
 
 
-#----------------------------------------------------- CONCAT ----------------------------------------------------------
+#--------------------------------------- CONCAT -----------------------------------
 
 #CONCAT é a junçõa de varios valores
 use db_discoteca;
@@ -150,11 +166,11 @@ DELIMITER ;
 
 select fn_info_artista(10);
 
-#----------------------------------------------------- REPLACE ---------------------------------------------------------
+#-------------------------------- REPLACE -------------------------------
 
 select replace(replace('coração', 'ç', 'c'), 'ã', 'a'); #cololamos o nome no caso: coração, em seguida o que quremos altera no caso o: ç e em seguida a alteração, no caso: c
 
-#------------------------------
+#------------------------------ A seguir estarei trocando o a sequecia de letras minusculas para maisculas
 DELIMITER $$
 CREATE FUNCTION fn_maiuscula(texto varchar(255))
 RETURNS VARCHAR(255)
@@ -178,7 +194,7 @@ select fn_maiuscula('abcd');
 
 
 
-#----------------------------------------------------- SOMANDO TEMPO ---------------------------------------------------------
+#--------------------------------------------------------------------------- SOMANDO TEMPO ---------------------------------------------------------
 
 #Para calcular horas eu preciso transformar de horas para segundo e então somar e depoois transformar em horas novamente
 SELECT TIME_TO_SEC('01:00:00');
@@ -190,6 +206,39 @@ SELECT SUM(time_to_sac(duracao)) FROM tb_musica
 WHERE id_disco = 8;
 
 
+
+#---------------------------------------------------------------------------- PROCEDURE  ----------------------------------------------------------------------
+#PARA UMA TAREFA ESPECIFICA PARA RETORNAR UM VALOR, USAMOS A FUNCTION
+#PROCUDER, NÃO TEM OBRIGARIDADE DE RETURNO
+# EU SO USO O BEGIN E O END QUANDO EU VOU TER MAIS DE UM PONTO E VIRGULA
+USE db_familia;
+
+DELIMITER $$
+CREATE PROCEDURE sp_pai_filho(cod_pai INT)
+BEGIN
+	SELECT  p.nome
+			,f.nome 
+        from tb_filho as f
+			inner join tb_pai as p
+			on p.id = f.id_pai
+        where p.id = cod_pai; 
+
+END $$
+
+
+#----------------------
+
+DELIMITER $$
+CREATE PROCEDURE sp_insert_pai(nome_pai VARCHAR(255))
+BEGIN
+	INSERT INTO tb_pai (nome) VALUES (nome_pai);
+    
+
+END $$
+DELIMITER ;
+
+
+CALL sp_insert_pai('Fabricio'); -- Para chamar um procedimento utilizamos o CALL em vez do SELECT
 
 
 
