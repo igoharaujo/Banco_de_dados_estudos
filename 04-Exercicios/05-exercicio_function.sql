@@ -298,7 +298,7 @@ RETURN texto;
 END $$
 DELIMITER ;
 
-
+SELECT fn_remove_acento('ÀÕ');
 
 
 
