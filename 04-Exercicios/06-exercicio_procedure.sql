@@ -1,4 +1,4 @@
-use db_discoteca2;
+use db_discoteca;
 DELIMITER $$
 CREATE FUNCTION fn_acento(texto VARCHAR(255))
 RETURNS VARCHAR(255)
@@ -60,7 +60,7 @@ DELIMITER ;
 
 select fn_acento('ã');
 
-#-------------------------------insert-------------------------------------
+#--------------------------------------------------------insert--------------------------------------------------------------
 
 #-------------------- tb_artista
 DELIMITER $$
@@ -73,8 +73,12 @@ CREATE PROCEDURE sp_insert_art(nome_art VARCHAR(255), nascimento_art DATE, fk_id
 	END $$
 DELIMITER ;
 
-
 call sp_insert_art('ãç', '2000-05-05', 1);
+
+SELECT * FROM tb_artista
+WHERE nome = 'ac';
+#
+#
 #-------------------- tb_disco
 DELIMITER $$
 CREATE PROCEDURE sp_insert_dis(titulo_dis VARCHAR(255), duracao_dis time, lancamento_dis year(4), fk_artista int, fk_gravadora int, fk_genero int)
@@ -82,11 +86,12 @@ CREATE PROCEDURE sp_insert_dis(titulo_dis VARCHAR(255), duracao_dis time, lancam
 		INSERT INTO tb_disco
 			(titulo, duracao, ano_lancamento, id_artista, id_gravadora, id_genero)
 		VALUES
-			(sp_remover_acento(titulo_dis), duracao_dis, lancamento_dis, fk_artista, fk_gravadora, fk_genero);
+			(fn_acento(titulo_dis), duracao_dis, lancamento_dis, fk_artista, fk_gravadora, fk_genero);
 
     END $$
 DELIMITER ;
-
+#
+#
 #-------------------- tb_genero
 DELiMITER $$
 CREATE PROCEDURE sp_insert_gen(nome_gen VARCHAR(255))
@@ -94,11 +99,12 @@ CREATE PROCEDURE sp_insert_gen(nome_gen VARCHAR(255))
 		INSERT INTO tb_genero
 			(nome)
 		VALUES
-			(sp_remover_acento(nome_gen));
+			(fn_acento(nome_gen));
 
 	END $$
 DELIMITER ;
-
+#
+#
 #-------------------- tb_gravadora
 DELiMITER $$
 CREATE PROCEDURE sp_insert_gra(nome_gra VARCHAR(255))
@@ -106,11 +112,12 @@ CREATE PROCEDURE sp_insert_gra(nome_gra VARCHAR(255))
 		INSERT INTO tb_gravadora
 			(nome)
 		VALUES
-			(sp_remover_acento(nome_gra));
+			(fn_acento(nome_gra));
 
 	END $$
 DELIMITER ;
-
+#
+#
 #-------------------- tb_musica
 DELiMITER $$
 CREATE PROCEDURE sp_insert_mus(nome_mus VARCHAR(255), duracao_mus TIME, fk_disco INT)
@@ -118,10 +125,13 @@ CREATE PROCEDURE sp_insert_mus(nome_mus VARCHAR(255), duracao_mus TIME, fk_disco
 		INSERT INTO tb_musica
 			(nome, duracao, id_disco)
 		VALUES
-			(sp_remover_acento(nome_mus), duracao_mus, fk_disco);
+			(fn_acento(nome_mus), duracao_mus, fk_disco);
 	END $$
 DELIMITER ;
+call sp_insert_mus();
 
+#
+#
 #-------------------- tb_tipo_artista
 DELiMITER $$
 CREATE PROCEDURE sp_insert_tipo_art(nome_tipo_art VARCHAR(255))
@@ -129,31 +139,76 @@ CREATE PROCEDURE sp_insert_tipo_art(nome_tipo_art VARCHAR(255))
 		INSERT INTO tb_tipo_artista
 			(nome)
 		VALUES
-			(sp_remover_acento(nome_tipo_art));
+			(fn_acento(nome_tipo_art));
 
 	END $$
 DELIMITER ;
 
-
 call sp_insert_art('marãoç','2000-05-05');
 
-
-#---------------------------------------------------------------------UPDATE
+#
+#
+#--------------------------------------------------------------------- UPDATE --------------------------------------------------------------------------
 
 #---------------tb_artista
 DELIMITER $$
-CREATE PROCEDURE sp_up_art(nome_art VARCHAR(255), cod_art INT)
+CREATE PROCEDURE sp_up_art(nome_art VARCHAR(255), nascimento_art date, cod_art INT)
 BEGIN
-	UPDATE tb_artista SET nome = nome_art
+	UPDATE tb_artista SET nome = fn_acento(nome_art), dt_nascimento = nascimento_art
     WHERE id = cod_art;
 
 END $$
 DELIMITER ;
+#drop procedure sp_up_art;
+
+call sp_up_art('iguinho','2000-10-21', 10);
+SELECT * FROM tb_artista
+where id = 10;
+
+#---------------tb_disco
+DELIMITER $$
+CREATE PROCEDURE sp_up_dis(titulo_dis varchar(255), duracao_dis TIME, lancamento_dis YEAR, cod_disco INT)
+BEGIN
+	UPDATE tb_disco SET titulo = fn_acento(titulo_dis), duracao = duracao_dis, ano_lancamento = lancamento_dis
+    where id = cod_disco;
+    
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_up_dis2(fk_art int, fk_gra int, fk_gen int, cod_disco int)
+BEGIN
+	UPDATE tb_disco SET titulo = id_artista = fk_art, id_gravadora = fk_gra, id_genero = fk_gen
+    where id = cod_disco;
+    
+END $$
+DELIMITER ;
+
+call sp_up_dis2(41112, 6, 5, 1);
+
+SELECT * FROM tb_disco;
+
+drop procedure sp_up_dis;
+
+#
+#
+#---------------tb_genero
+DELIMILER $$
+CREATE PROCEDURE sp_up_gen()
+	BEGIN
+		
+    
+    
+    
+    
+    END $$
+DELIMITER ;
 
 
 
-UPDATE TB_MAE SET = 'VANDA'
-WHERE ID = 10;
+
+
 
 
 
