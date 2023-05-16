@@ -90,3 +90,52 @@ DELIMITER ;
 
 
 drop function fn_acento;
+
+
+
+#------------------------------------------------------------------------- CONDICIONAIS ----------------------------------------------------------------------
+-- A função if() me permite receber tres parametros
+SELECT IF(5 > 10, 'Verdadeiro', 'Falso' ); -- 5 > 10 se o resutado for verdaderiro entao ele mostrara 'verdadeiro' se for falso ele mostrará: 'Falso'
+
+set @idade = 18; -- para criar variavel fora de funcão eu coloco o SET e o @ antes
+SELECT IF(@idade >= 18, 'maior de idade', 'menor de idade' ) as idade;
+
+#utilizando a função IF()
+SELECT
+	nome,
+    dt_nascimento,
+    if(dt_nascimento != '0000-00-00', 'artista solo', 'outras categorias') as categoria
+    FROM tb_artista;
+
+#utilizanod em uma procedure
+-- usamos o if exists pra caso exista o parametro ele execute o delete, caso não existea o parametro ele executara o 'id invalido'
+DELIMITER $$
+CREATE PROCEDURE sp_del_gen(cod_gen INT)
+BEGIN
+	IF EXISTS (SELECT id FROM tb_genero WHERE id = cod_gen) THEN -- THEN: comparacao, usamos o than para fazer essa ligacao, ex: se existe faça: delete...
+		DELETE FROM tb_genero where id = cod_gen;
+    else 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codigo de genero invalido' ; -- eu uso esse codigo para personar, eu preciso usar o cod: '45000' para funcionar
+    end if;
+
+END $$
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

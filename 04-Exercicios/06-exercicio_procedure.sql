@@ -1,4 +1,4 @@
-use db_discoteca;
+use db_discoteca2;
 DELIMITER $$
 CREATE FUNCTION fn_acento(texto VARCHAR(255))
 RETURNS VARCHAR(255)
@@ -54,13 +54,12 @@ BEGIN
     
 RETURN texto;
 
-
 END $$
 DELIMITER ;
 
 select fn_acento('ã');
 
-#--------------------------------------------------------insert--------------------------------------------------------------
+#------------------------------------------------------------------insert---------------------------------------------------------------------------------------
 
 #-------------------- tb_artista
 DELIMITER $$
@@ -90,6 +89,12 @@ CREATE PROCEDURE sp_insert_dis(titulo_dis VARCHAR(255), duracao_dis time, lancam
 
     END $$
 DELIMITER ;
+
+call sp_insert_dis('Lúcícãno fítnês', '03:00:00', 1993, 1, 10, 14);
+
+select * from tb_disco 
+where id = (select max(id) from tb_disco);
+
 #
 #
 #-------------------- tb_genero
@@ -194,16 +199,131 @@ drop procedure sp_up_dis;
 #
 #
 #---------------tb_genero
-DELIMILER $$
-CREATE PROCEDURE sp_up_gen()
+DELIMITER $$
+CREATE PROCEDURE sp_up_gen(nome_gen VARCHAR(255), cod_gen INT)
 	BEGIN
-		
-    
-    
-    
+		UPDATE tb_genero SET nome = fn_acento(nome_gen)
+        where id = cod_gen;
     
     END $$
 DELIMITER ;
+CALL sp_up_gen();
+
+#---------------tb_gravadora
+DELIMITER $$
+CREATE PROCEDURE sp_up_gra(nome_gra varchar(255), cod_gra INT)
+	BEGIN
+		UPDATE tb_gravadora SET nome = fn_acento(nome_gra)
+        where id = cod_gra;
+    END $$
+DELIMITER ;
+
+#---------------tb_musica
+DELIMITER $$
+CREATE PROCEDURE sp_up_gra(nome_mus VARCHAR(255), duracao TIME, cod_mus INT)
+	BEGIN
+		UPDATE tb_musica SET nome = fn_acento(nome_mus), duracao = duracao_mus
+        where id = cod_mus;
+    END $$
+DELIMITER ;
+
+#---------------tb_tipo_artista
+DELIMITER $$
+CREATE PROCEDURE sp_up_tipo_art(nome_tipo_art varchar(255), cod_tipo_art INT)
+	BEGIN
+		UPDATE tb_gravadora SET nome = fn_acento(nome_tipo_art)
+        where id = cod_tipo_art;
+    END $$
+DELIMITER ;
+
+
+#--------------------------------------------------------------------- DELETE --------------------------------------------------------------------------
+
+#---------------tb_artista
+DELIMITER $$
+CREATE PROCEDURE sp_del_art(cod_art INT)
+BEGIN
+	DELETE FROM tb_artista
+    where id = cod_art;
+    
+END $$
+DELIMITER ;
+
+call sp_del_art(40);
+SELECT MAX(ID) FROM tb_artista;
+
+#---------------tb_disco
+DELIMITER $$
+CREATE PROCEDURE sp_del_dis(cod_dis INT)
+BEGIN
+	DELETE FROM tb_disco
+    where id = cod_dis;
+    
+END $$
+DELIMITER ;
+
+#---------------tb_genero
+DELIMITER $$
+CREATE PROCEDURE sp_del_gen(cod_gen INT)
+BEGIN
+	IF EXISTS (SELECT id FROM tb_genero WHERE id = cod_gen) THEN -- THEN: comparacao, usamos o than para fazer essa ligacao, ex: se existe faça: delete...
+		DELETE FROM tb_genero where id = cod_gen;
+    else 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codigo de genero invalido' ; -- eu uso esse codigo para personar, eu preciso usar o cod: '45000' para funcionar
+    end if;
+
+END $$
+DELIMITER ;
+
+
+
+call sp_del_gen(50000000);
+
+DROP PROCEDURE sp_del_gen;
+
+
+
+
+
+
+
+#---------------tb_gravadora
+DELIMITER $$
+CREATE PROCEDURE sp_del_gra(cod_gra INT)
+BEGIN
+	DELETE FROM tb_gravadora
+    WHERE id = cod_gra;
+    
+END $$
+DELIMITER ;
+
+#---------------tb_musica
+
+DELIMITER $$
+CREATE PROCEDURE sp_del_mus(cod_mus INT)
+BEGIN
+	DELETE FROM tb_musica
+    where id = cod_mus;
+
+END $$
+DELIMITER ;
+
+#---------------tb_tipo_artista
+DELIMITER $$
+CREATE PROCEDURE sp_del_tipo_art(cod_art INT)
+BEGIN
+	DELETE FROM tb_tipo_artista
+    WHERE id = cod_art;
+
+END $$
+DELIMITER ;
+
+
+
+
+
+
+
 
 
 
