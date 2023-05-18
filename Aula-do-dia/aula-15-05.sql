@@ -122,6 +122,102 @@ END $$
 DELIMITER ;
 
 
+#------------------------------------------------------------------------- CASE ----------------------------------------------------------------------
+#aula - 18-05
+use db_familia;
+
+
+select 
+	id
+	,nome
+	, case # estrutara condicional parecido com os if, mas usado quando eu sei a quatidade
+		when id_mae IS NULL THEN 'mãe não informada'
+        else id_mae 
+	  end as id_mae
+	,case
+    when id_pai IS NULL THEN 'pai não informado'
+    else id_pai
+    end as id_pai
+ from tb_filho ;
+
+
+
+SELECT f.nome as filho
+		,f.id
+        ,case
+        WHEN f.id_mae IS NULL THEN 'sem mae'
+        else m.nome
+       end as mae
+       , case
+       when f.id_pai IS NULL THEN 'sem pai, o jovem é orfão'
+       else p.nome
+       end as pai
+from tb_filho as f left JOIN tb_pai as p
+ON f.id_pai = p.id left join tb_mae as m
+ON m.id = f.id_mae;
+
+
+desc tb_filho;
+
+#como apagar o constraint
+alter table tb_filho drop constraint fk_id_pai;
+alter table tb_filho modify id_pai int null;
+
+
+update tb_filho set id_pai = null
+where id = 11;
+
+alter table tb_filho drop constraint fk_id_mae;
+alter table tb_filho MODIFY id_mae int null;
+
+SELECT
+	id
+	,nome
+    ,dt_nascimento
+    , 
+    CASE WHEN dt_nascimento = '0000-00-00' THEN 'OUTRO TIPO'
+    ELSE TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE())
+    end as idades
+    ,CASE
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE()))  < 18 THEN 'menor de idade'
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE()))  >= 65 THEN 'idoso'
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE())) >= 18 THEN 'maior de idade'
+    ELSE 'INEXISTENTE'
+    END AS 'FAIXA ETARIA'
+    
+    
+    
+    
+FROM tb_artista;
+	
+
+
+
+
+
+
+
+
+
+
+
+# funções para trabalhar com string
+#essa função mostra a qtd de caracteres que existem em uma string, ele contra inclusive o acento. 
+
+select length(fn_acento('LUCÍANÓ'));
+#remove os espaços
+SELECT trim();
+#Remove os espalos da direita
+SELECT ltrim();
+#remove os espeaços da direita
+SELECT rtrim();
+
+
+
+
+
+#
+#
 
 
 
@@ -135,7 +231,4 @@ DELIMITER ;
 
 
 
-
-
-
-
+#
