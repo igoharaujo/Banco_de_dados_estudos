@@ -1,3 +1,13 @@
+#como apagar o constraint
+alter table tb_filho drop constraint fk_id_pai;
+alter table tb_filho modify id_pai int null;
+
+update tb_filho set id_pai = null
+where id = 11;
+
+alter table tb_filho drop constraint fk_id_mae;
+alter table tb_filho MODIFY id_mae int null;
+
 #-------------------------------------------------FUNÇÕES---------------------------------------------------#
 #-------------------------------------------------------------------------
 -- OBS: FUNÇÃO QUE CAPTURA O USUARIO E O HOST DE QUEM ESTA LOGADO NO MOMENTO
@@ -69,6 +79,7 @@ from tb_funcionario as funcionario INNER JOIN tb_horario as horario
 ON funcionario.id = horario.id_funcionario;
 
 select * from vw_ponto_eletronico;
+
 
 -- ---------------------------------------- CRIANDO FUNÇÕES ------------------------------------------------------
 
@@ -241,7 +252,89 @@ DELIMITER ;
 CALL sp_insert_pai('Fabricio'); -- Para chamar um procedimento utilizamos o CALL em vez do SELECT
 
 
+#------------------------------------------------------------------------- CONDICIONAIS ----------------------------------------------------------------------
 
+-- A função if() me permite receber tres parametros
+
+SELECT IF(5 > 10, 'Verdadeiro', 'Falso' ); -- 5 > 10 se o resutado for verdaderiro entao ele mostrara 'verdadeiro' se for falso ele mostrará: 'Falso'
+
+set @idade = 18; -- para criar variavel fora de funcão eu coloco o SET e o @ antes
+SELECT IF(@idade >= 18, 'maior de idade', 'menor de idade' ) as idade;
+
+#utilizando a função IF()
+SELECT
+	nome,
+    dt_nascimento,
+    if(dt_nascimento != '0000-00-00', 'artista solo', 'outras categorias') as categoria
+    FROM tb_artista;
+
+#utilizanod em uma procedure
+-- usamos o if exists pra caso exista o parametro ele execute o delete, caso não existea o parametro ele executara o 'id invalido'
+DELIMITER $$
+CREATE PROCEDURE sp_del_gen(cod_gen INT)
+BEGIN
+	IF EXISTS (SELECT id FROM tb_genero WHERE id = cod_gen) THEN -- THEN: comparacao, usamos o than para fazer essa ligacao, ex: se existe faça: delete...
+		DELETE FROM tb_genero where id = cod_gen;
+    else 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Codigo de genero invalido' ; -- eu uso esse codigo para personar, eu preciso usar o cod: '45000' para funcionar
+    end if;
+
+END $$
+DELIMITER ;
+#------------------- CASE ------------------
+# estrutara condicional parecido com os if, mas usado quando eu sei a quatidade
+# para usar o case eu sigo a seguinte sequencia: 
+#CASE
+#	WHEN oque eu quero THEN o que vai acontecer # o THEN serve para ligar a codição com a outra
+# 	ELSE segunda alternativa
+#end case;
+
+# Aqui ele vai selecionar a tabela e colocar a mensagens de acordo com a idade
+SELECT
+	id
+	,nome
+    ,dt_nascimento
+    , 
+    CASE WHEN dt_nascimento = '0000-00-00' THEN 'OUTRO TIPO'
+    ELSE TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE())
+    end as idades
+    ,CASE
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE()))  < 18 THEN 'menor de idade'
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE()))  >= 65 THEN 'idoso'
+    WHEN (TIMESTAMPDIFF(YEAR, dt_nascimento, CURDATE())) >= 18 THEN 'maior de idade'
+    ELSE 'INEXISTENTE'
+    END AS 'FAIXA ETARIA'
+    
+    
+# outro exercicio de CASE 
+
+SELECT f.nome as filho
+		,f.id
+        ,case
+        WHEN f.id_mae IS NULL THEN 'sem mae'
+        else m.nome
+       end case as mae
+       , case
+       when f.id_pai IS NULL THEN 'sem pai, o jovem é orfão'
+       else p.nome
+       end as pai
+from tb_filho as f left JOIN tb_pai as p
+ON f.id_pai = p.id left join tb_mae as m
+ON m.id = f.id_mae;
+
+
+# --------------------------------------------------funções para trabalhar com string -----------------------------------------------------
+#essa função mostra a qtd de caracteres que existem em uma string, ele conta inclusive o acento. 
+select length(fn_acento('LUCÍANÓ'));
+
+#remove os espaços
+SELECT trim('FD         ');
+
+#Remove os espalos da direita
+SELECT ltrim();
+
+#remove os espeaços da direita
+SELECT rtrim();
 
 
 
