@@ -139,82 +139,65 @@ VALUES
     
     update tb_produto set quantidade = 50 where id = 1;
     
-    
-    #correção atualizadno a quantidade do produto de acordo com as vendas feitas
-DELIMITER $$
-CREATE TRIGGER tr_venda
-after insert
-ON tb_venda
-FOR EACH ROW
 
-	BEGIN
-		UPDATE tb_produto SET quantidade = (quantidade - new.qtd_comprada) WHERE id = new.id_produto;
-
-    END $$
-     
-DELIMITER ;
-
-
-
-     SELECT * FROM TB_PRODUTO;
-     
-INSERT INTO tb_venda
-	(id_produto, qtd_comprada)
-VALUES
-	(1,4);
     
     #----------------- EXTORNO DA COMPRA
-    
+    drop trigger tr_delete_atualiza_estoque;
     DELIMITER $$
     CREATE TRIGGER tr_delete_atualiza_estoque
-    after delete
+	BEFORE DELETE
     ON tb_venda
     fOR each row 
     BEGIN 
-		update TB_PRODUTO set quantidade = (quantidade + OLD.qtd_comprada)
-        where ID = ld.ID_PRODUTO;
-    
-
+		CASE 
+			WHEN EXISTS (SELECT id FROM tb_produto WHERE id = OLD.id_produto) THEN
+				update TB_PRODUTO set quantidade = (quantidade + OLD.qtd_comprada)
+				where ID = Old.ID_PRODUTO;
+			ELSE
+				SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Não foi possivel realizar o extorno';
+		END CASE;
     END $$
     DELIMITER ;
+    
+    
+    delete from tb_venda WHERE id = 100;
+    #-----------------  Venda 
+    
+    
+    
+    
+    #----------------- correção de da venda
+    DELIMITER $$
+    CREATE TRIGGER tr_atualizar_estoque
+    AFTER UPDATE
+    ON tb_venda FOR EACH ROW
+    BEGIN
+		DECLARE valida_estoque INT;
+        DECLARE estoque_atual INT;
+        SELECT quantidade + (OLD.qtd_comprada - NEW.qtd_comprada) INTO valida_estoque FROM tb_produto WHERE id = new.id_produto;
+        SELECT quantidade INTO estoque_atual FROM tb_produto WHERE id = new.id_produto;
+        
+		IF valida_estoque < 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Quantidade em estoque insuficiente';
+        ELSEIF valida_estoque = estoque_atual THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A quantidade nova, é igual a anterior';
+        ELSE 
+			UPDATE tb_produto SET quantidade = (quantidade +(OLD.qtd_comprada - NEW.qtd_comprada))
+            WHERE id = new.id_produto;
+		END IF;
+        
+	END $$
+    DELIMITER ;
+    
+    
+    
+    
+    
+    
+    
+    
+    
     DELETE FROM tb_venda WHERE id = 1;
     
-    #----------------- UPDATE
-    
-    DELIMITER $$
-    CREATE TRIGGER tr_atualiza_estoque
-    after UPDATE
-    ON tb_venda
-    fOR each row 
-    BEGIN 
-		update TB_PRODUTO set quantidade = (quantidade + (OLD.qtd_comprada - NEW.qtd_comprada))
-        where ID = new.ID_PRODUTO;
-    
-
-    END $$
-    DELIMITER ;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    drop trigger tr_extorno;
-select * from tb_produto;
-     
-
+   
      
      
 
