@@ -12,7 +12,7 @@ Crie uma trigger no db_discoteca2 que a cada atualização do tempo de musica de
 Crie uma trigger no db_discoteca2 que a cada musica deletada de um disco, o mesmo disco tenha em sua respectiva tabela uma atualização do tempo total, sendo a soma total do tempo das musicas restantes desse disco.*/
 
 
-
+use db_discoteca2;
 
 #-------------------------------------------- FUNÇOES QUE valida as strings
 DELIMITER $$
@@ -20,10 +20,10 @@ CREATE FUNCTION sp_valida_string(valor VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC
 BEGIN
-			declare validade boolean;
-			IF valor IS NULL THEN set validade = false;
-            ELSEIF trim(valor) NOT LIKE '%___%' THEN set validade = false;
-            ELSEIF valor = '' THEN  set validade = false;
+			
+			IF valor IS NULL THEN set valor = false;
+            ELSEIF trim(valor) NOT LIKE '%___%' THEN set valor = false;
+            ELSEIF valor = '' THEN  set valor = false;
             
 	END IF;
 
@@ -32,7 +32,7 @@ RETURN fn_acento(trim(LOWER(valor)));
 END $$
 DELIMITER ;
 drop function sp_valida_string;
-SELECT SP_VALIDA_STRING('oifa');
+SELECT SP_VALIDA_STRING('');
 
 drop function sp_valida_string;
 #------------- correção
