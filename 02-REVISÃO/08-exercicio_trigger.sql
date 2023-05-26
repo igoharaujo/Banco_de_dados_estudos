@@ -20,17 +20,20 @@ CREATE FUNCTION sp_valida_string(valor VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC
 BEGIN
-			
-			IF valor IS NULL THEN set valor = false;
-            ELSEIF trim(valor) NOT LIKE '%___%' THEN set valor = false;
+			IF ISNULL(valor) = 1 then SET valor = false;
+        ELSE
+            IF trim(valor) NOT LIKE '%___%' THEN set valor = false;
             ELSEIF valor = '' THEN  set valor = false;
             
 	END IF;
+    END IF;
 
 RETURN fn_acento(trim(LOWER(valor)));
     
 END $$
 DELIMITER ;
+
+SELECT sp_valida_string(null);
 drop function sp_valida_string;
 SELECT SP_VALIDA_STRING('');
 
@@ -182,16 +185,17 @@ CREATE PROCEDURE sp_update_art(cod_art INT, nome_art VARCHAR(255), nascimento DA
         
         IF nascimento > curdate() THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Data invalida';
         ELSEIF verifica = false THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'id tipo_artista não encontrado';
+        elseif sp_valida_string(nome_art) = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'nome informado é invalidado';
         ELSE 
-			UPDATE tb_artista SET nome = sp_valida_string(nome_art), dt_nascimento = nascimento, id_tipo_artista = id_t_art
+			UPDATE tb_artista SET nome = (nome_art), dt_nascimento = nascimento, id_tipo_artista = id_t_art
             WHERE id = cod_art;
 		END IF;
     END $$
 DELIMITER ;
 
-SELECT * FROM TB_ARTISTA;
-
-CALL sp_update_art(1,'igo', '2023-05-05', 10);
+SELECT * FROM TB_ARTISTA where id = 1;
+drop procedure sp_update_art;
+CALL sp_update_art(1,'igor', '2023-05-05', 1);
 #	 
 #
 #---------------tb_disco

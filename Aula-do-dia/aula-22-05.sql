@@ -170,7 +170,8 @@ VALUES
     DELIMITER $$
     CREATE TRIGGER tr_atualizar_estoque
     AFTER UPDATE
-    ON tb_venda FOR EACH ROW
+    ON tb_venda 
+    FOR EACH ROW
     BEGIN
 		DECLARE valida_estoque INT;
         DECLARE estoque_atual INT;
