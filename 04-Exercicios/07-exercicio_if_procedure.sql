@@ -12,7 +12,7 @@ Para cada erro deve ser gerado uma mensagem personalizada o identificando.*/
 #------------------------------------------------------------------insert---------------------------------------------------------------------------------------
 
 #-------------------- tb_artista
-DELIMITER $$
+DELIMITER $$ b
 CREATE PROCEDURE sp_insert_art(nome_art VARCHAR(255), nascimento_art DATE, fk_id_tipo_art INT)
 	BEGIN
     DECLARE id_existe INT;
