@@ -208,7 +208,7 @@ WHERE preco = (SELECT MIN(preco) FROM tb_produto);
 
 
 
-
+#teste xamp/mysql/bin 
 
 
 
