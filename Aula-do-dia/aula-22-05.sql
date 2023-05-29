@@ -240,7 +240,11 @@ VALUES
 	#BACKUP CONSCISTENTE(caso falhe no meio o backup é cancelado)-------------------------------------------
 		#mysqldump -u root -p --single-transaction --routines --triggers db_discoteca2 > c:\backup\Dumpfull_transactiondb_discoteca229052023.sql
         
-        
+	#para recuperar o backup:-----------------------------------------------------------------------------
+    -- primeiro eu vou criar a database e em seguida vou colocar esse comando:
+    #C:\xampp\mysql\bin>mysql -u root -p db_discoteca2 < c:\backup\Dumpfull_transactiondb_discoteca229052023.sql
+    #o que mudou foi que coloquei o < e o caminho de onde esta o buckup
+
         
      
      
