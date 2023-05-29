@@ -62,7 +62,7 @@ WHERE ano_lancamento = 1996 or ano_lancamento = 1999 or ano_lancamento = 2015 OR
 SELECT titulo, ano_lancamento FROM tb_disco 
 WHERE ano_lancamento BETWEEN 2000 AND 2022;
 
-
+#arroz
 
 
 
