@@ -201,10 +201,47 @@ VALUES
    
      
      
-
+	#-----------------------------------------------------aula 29-05-----------------------------------------
+    
+     #para entrar no servidor do mysql usamos esse caminho:
+     # mysql -u root -p
+     # -u: user de usuario
+     # -p: senha de senha en ingles
+     
+     -- agora vamos entrar nos comando do mysql
+     # show status; mostra tudo que esta ativo
+     # show databases;
+     
+     #-------------------------------------------------------backup ou Damp--------------------------------------------
      
      
+     -- tipos de backup:-----------
+     # full - completo
+     #diferencial - a diferença de um backup para outro
+     #dados - somentes os dados
+     #ddl - o de estrutura
+     -- ----------------------------
      
+      #BACKUP FULL de tudo -------------------------------------------------------------------------------
+     # caminho C:\xampp\mysql\bin>mysqldump -u root -p db_familia > c:\backup\DumpFullDb_familia29052023.sql
+     #o caminho ate o bin, mysqdump: e o comando para o backup -u root -p db_famili: a database que eu quero fazer o backup e > onde eu vou salvar o backup;
+     #DumpFullDb_familia29052023.sql - esse final é o nome do arquivo, o mais detalhado possivel
+     
+	# para fazer o backup das trigges, routines (procedure, function...) fazemos dessa forma:
+	# mysqldump -u root -p --routines --triggers db_discoteca2 > c:\backup\DumpFulldb_discoteca229052023.sql
+    
+    
+    #BACKUP DOS DADOS--------------------------------------------------------------------------------------
+		#C:\xampp\mysql\bin>mysqldump -u root -p --no-create-info db_discoteca2 > c:\backup\DumpOnlydb_discoteca229052023.sql
+     
+	#BACKUP DA ESTRUTURA-----------------------------------------------------------------------------------
+		#C:\xampp\mysql\bin>mysqldump -u root -p --routines --triggers --no-data db_discoteca2 > c:\backup\DumpNo_datadb_discoteca229052023.sql
+     
+	#BACKUP CONSCISTENTE(caso falhe no meio o backup é cancelado)-------------------------------------------
+		#mysqldump -u root -p --single-transaction --routines --triggers db_discoteca2 > c:\backup\Dumpfull_transactiondb_discoteca229052023.sql
+        
+        
+        
      
      
      
