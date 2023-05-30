@@ -271,6 +271,8 @@ VALUES
     -- -select
     -- -execute - (procedimentos e funções) a pessoa tem o privilegio de executa as procedures
     
+ #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
 -- privilegios para modificar a estruturas:
 	-- -create
     -- -alter
@@ -291,7 +293,7 @@ VALUES
     -- -grant option   ---------------- ATRIBUIR PRIVILEGIOS A OUTRO
     -- -usage		   ---------------- NÃO ALTERA PRIVILEGIOS, ESTE É O PADRÃO PRA NOVOS USUARIOS
     
-    #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   
     #NIVEIS DE PRIVILEGIOS
 		#Global - acesso a todas as tabelas de todos os bancos
         #Database - acesso a tabelas de bancode de dados especificos
@@ -303,12 +305,32 @@ VALUES
 		#GRANT - Atribuir privilegios
         #REVOKE - Remover privilegios
     
-    
-	#para criar o usuario: 	CREATE USER nome@local INDENTIFIED BY senha;
+#criando ususarios e dando privilegios: -------------------------------------------------------------------------
+
+	#para criar o usuario: 	CREATE USER nome@local IDENTIFIED BY senha;
+		-- CREATE USER 'igor'@'localhost' IDENTIFIED BY '1234';
+        
     #Para dar o privilegio: GRANT privilegios ON banco.tabela TO usuario@local;
+		-- GRANT ALL PRIVILEGES ON *.* TO 'igor'@localhost;
+		-- GRANT SELECT, INSERT, UPDATE, DELETE ON db_discoteca2.* TO 'igor'@localhost; Aqui estou concedendo, o privilegio de fazer select insert... na database db_discoteca em todas as tabelas
+        
     #Para remover: REMOCE privilegios ON banco.tabela FROM usuario@local;
     
+#vendo os usuarios e os previlegios----------------------------------------------------------------------------
     
+	#para ver os usuario:
+		-- SELECT User, Host FROM mysql.user;
+        
+    #Para ver os previlegios do usuario:
+		/* SHOW GRANTS FOR 'igor'@localhost;
++-------------------------------------------------------------------------------------------------------------+
+| Grants for igor@localhost                                                                                   |
++-------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `igor`@`localhost` IDENTIFIED BY PASSWORD '*A4B6157319038724E3560894F7F932C8886EBFCF' |
++-------------------------------------------------------------------------------------------------------------+
+1 row in set (0.000 sec)*/ 
+		# *.* Significa que o usuario tem acesso a todas as databases e todas as tabelas, a primeira * representa as databases e a segunda * a todas as tabelas
+
     
     
     
