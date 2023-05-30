@@ -198,7 +198,7 @@ VALUES
     
     DELETE FROM tb_venda WHERE id = 1;
     
-   
+  # mysqlserver8.0
      
      
 	#-----------------------------------------------------aula 29-05-----------------------------------------
@@ -222,7 +222,7 @@ VALUES
      #ddl - o de estrutura
      -- ----------------------------
      
-      #BACKUP FULL de tudo -------------------------------------------------------------------------------
+      #BACKUP FULL de tudo da database -------------------------------------------------------------------------------
      # caminho C:\xampp\mysql\bin>mysqldump -u root -p db_familia > c:\backup\DumpFullDb_familia29052023.sql
      #o caminho ate o bin, mysqdump: e o comando para o backup -u root -p db_famili: a database que eu quero fazer o backup e > onde eu vou salvar o backup;
      #DumpFullDb_familia29052023.sql - esse final é o nome do arquivo, o mais detalhado possivel
@@ -237,26 +237,76 @@ VALUES
 	#BACKUP DA ESTRUTURA-----------------------------------------------------------------------------------
 		#C:\xampp\mysql\bin>mysqldump -u root -p --routines --triggers --no-data db_discoteca2 > c:\backup\DumpNo_datadb_discoteca229052023.sql
      
-	#BACKUP CONSCISTENTE(caso falhe no meio o backup é cancelado)-------------------------------------------
-		#mysqldump -u root -p --single-transaction --routines --triggers db_discoteca2 > c:\backup\Dumpfull_transactiondb_discoteca229052023.sql
+	# -- BACKUP CONSCISTENTE(caso falhe no meio o backup é cancelado)-------------------------------------------
+		#mysqldump -u root -p --single-transaction --routines --triggers db_discoteca2 > c:\backup\Dumpfull_transactiondb_discoteca229052023.sql # -- routines são as procedures e functions
+        --  ESSE É O IDEAL PARA FAZER BACKUP, 
+        -- O parametro: --complete-insert salva os insert tambem
         
 	#para recuperar o backup:-----------------------------------------------------------------------------
     -- primeiro eu vou criar a database e em seguida vou colocar esse comando:
     #C:\xampp\mysql\bin>mysql -u root -p db_discoteca2 < c:\backup\Dumpfull_transactiondb_discoteca229052023.sql
     #o que mudou foi que coloquei o < e o caminho de onde esta o buckup
-
+    
+    
+    
+    #-----------------------------------------------------------------AULA-30-05 -----------------------------------------------------------
+#Como identificar um erro no backup, usamos o seguinte parametro:
+	
+	#mysqldump -u root -p --all databases verbose > c:\backup\servidor\servidor.sql
         
+	#comando para o apagar todas as datasbases 
      
      
-     
-     
+    
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------USUÁRIOS e PRIVILÉGIOS------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+
+-- Usuarios, são todos os indivíduos que possam se concetat no servidor
+-- Privilégios: são as permissões
+-- O privilégios para trabalhar com os dados são:
+	-- -insert
+    -- -update
+    -- -delete
+    -- -select
+    -- -execute - (procedimentos e funções) a pessoa tem o privilegio de executa as procedures
+    
+-- privilegios para modificar a estruturas:
+	-- -create
+    -- -alter
+    -- -drop
+    -- -views
+    -- -trigger
+    -- -index (select) esta pesquisando pelo o banco o select, quando coloco o index ele ajudar a achar oq que quero mais rapidos, os filtros
+    -- -routine 
+    
+-- Privilégio administrativos
+	-- -create user
+    -- -show database
+    -- -shotdown (ligar)
+    -- -reload
+    
+-- privilégio adicional
+	-- -all            ---------------- TODOS OS PREVILEGIOS
+    -- -grant option   ---------------- ATRIBUIR PRIVILEGIOS A OUTRO
+    -- -usage		   ---------------- NÃO ALTERA PRIVILEGIOS, ESTE É O PADRÃO PRA NOVOS USUARIOS
+    
+    #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #NIVEIS DE PRIVILEGIOS
+		#Global - acesso a todas as tabelas de todos os bancos
+        #Database - acesso a tabelas de bancode de dados especificos
+        #table - acesso a todas as colunas de tabelas especificas
+        #Column - acesso apenas a colunas especificas de uma tabela
+   
+   
+   #DCL - DATA CONTROL LENGUAGE
+		#GRANT - Atribuir privilegios
+        #REVOKE - Remover privilegios
     
     
-    
-    
-    
-    
-    
+	#para criar o usuario: 	CREATE USER nome@local INDENTIFIED BY senha;
+    #Para dar o privilegio: GRANT privilegios ON banco.tabela TO usuario@local;
+    #Para remover: REMOCE privilegios ON banco.tabela FROM usuario@local;
     
     
     
