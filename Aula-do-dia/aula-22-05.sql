@@ -344,7 +344,7 @@ VALUES
     
     
     
-    
+    #oi
     
     show grants for 'igor'@localhost;
     
