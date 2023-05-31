@@ -314,7 +314,15 @@ VALUES
 		-- GRANT ALL PRIVILEGES ON *.* TO 'igor'@localhost;
 		-- GRANT SELECT, INSERT, UPDATE, DELETE ON db_discoteca2.* TO 'igor'@localhost; Aqui estou concedendo, o privilegio de fazer select insert... na database db_discoteca em todas as tabelas
         
-    #Para remover: REMOCE privilegios ON banco.tabela FROM usuario@local;
+	#Dando o privilegio de quais select vai aparecer para o usuario
+		-- tb_historico grant select (id, nome, id_mae) on db_familia.tb_filho to 'luciano'@'localhost'; nesse caso o usuario so poderá ver o id, nome, e o id_mae
+        
+	#Para dar o previlegio de procedure:
+		-- ON PROCEDURE sp_insert_pai TO 'igor'@'localhost';
+        
+    #Para remover: REVOKE privilegios ON banco.tabela FROM usuario@local;
+		-- REVOKE update, delete ON db_familia.* FROM 'igor'@localhost;
+	
     
 #vendo os usuarios e os previlegios----------------------------------------------------------------------------
     
@@ -332,14 +340,17 @@ VALUES
 		# *.* Significa que o usuario tem acesso a todas as databases e todas as tabelas, a primeira * representa as databases e a segunda * a todas as tabelas
 
     
+    #-----------------------------------------------------------------------------Aula 31-05-23---------------------------------------------------------------
     
     
     
     
     
+    show grants for 'igor'@localhost;
     
+    REVOKE SELECT, INSERT, UPDATE, DELETE ON db_familia.tb_filho FROM 'igor'@localhost;
     
-    
+   tb_historico grant select (id, nome, id_mae) on db_familia.tb_filho to 'luciano'@'localhost';
     
     
     
