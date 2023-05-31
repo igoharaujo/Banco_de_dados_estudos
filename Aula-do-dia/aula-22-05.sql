@@ -330,7 +330,7 @@ VALUES
 		-- SELECT User, Host FROM mysql.user;
         
     #Para ver os previlegios do usuario:
-		/* SHOW GRANTS FOR 'igor'@localhost;
+		/* SHOW GRANTS FOR 'igor'@localhost;.
 +-------------------------------------------------------------------------------------------------------------+
 | Grants for igor@localhost                                                                                   |
 +-------------------------------------------------------------------------------------------------------------+
