@@ -7,14 +7,14 @@ use streamer;
 
 CREATE TABLE IF NOT EXISTS pais(
 	id_pais INT PRIMARY KEY auto_increment AUTO_INCREMENT,
-    nome VARCHAR(42) NOT NULL,
-    codigo VARCHAR(4) NOT NULL
+    nome VARCHAR(100) NOT NULL,
+    codigo VARCHAR(20) NOT NULL
 )auto_increment = 1;
 
 CREATE TABLE IF NOT EXISTS classificacao(
 	id_classificacao INT PRIMARY KEY AUTO_INCREMENT,
-    idade year NOT NULL,
-    descricao VARCHAR(45) NOT NULL
+    idade VARCHAR(20) NOT NULL,
+    descricao VARCHAR(100) NOT NULL
     )auto_increment = 1;
     
 CREATE TABLE IF NOT EXISTS ator(
@@ -90,7 +90,6 @@ CONSTRAINT fk_catalogo_filme FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_cat
 CREATE TABLE IF NOT EXISTS serie(
 	id_serie INT PRIMARY KEY AUTO_INCREMENT,
     qtd_epsodio INT,
-    nome VARCHAR(32) NOT NULL,
     id_catalogo INT,
 CONSTRAINT fk_catalogo_serie FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_catalogo)
 )auto_increment = 1;
@@ -103,7 +102,7 @@ CREATE TABLE IF NOT EXISTS temporada(
 CONSTRAINT fk_serie FOREIGN KEY(id_serie) REFERENCES serie(id_serie)
 )auto_increment = 1;
 
-CREATE TABLE IF NOT EXISTS epsodio(
+CREATE TABLE IF NOT EXISTS episodio(
 	id_epsodio INT PRIMARY KEY AUTO_INCREMENT,
     numero INT,
     id_catalogo INT,
@@ -111,6 +110,8 @@ CREATE TABLE IF NOT EXISTS epsodio(
 CONSTRAINT fk_catalogo_epsodio FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_catalogo),
 CONSTRAINT fk_temporada FOREIGN KEY(id_temporada) REFERENCES temporada(id_temporada)
 )auto_increment = 1;
+
+-- ----------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS endereco(
 	id_endreco INT PRIMARY KEY AUTO_INCREMENT,
@@ -194,4 +195,4 @@ CONSTRAINT fk_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario
 CONSTRAINT fk_id_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id_endreco)
 )auto_increment = 1;
 
-
+-- drop database streamer;
