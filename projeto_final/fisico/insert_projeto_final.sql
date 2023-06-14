@@ -508,8 +508,11 @@ VALUES
     (15, 5),   -- Anne Hathaway, Interestelar
     (16, 5);   -- Jessica Chastain, Interestelar
     
--- Séries
-INSERT INTO ator_catalogo (id_ator, id_catalogo) VALUES
+-- -----------------------------------------------------------------------------
+
+INSERT INTO ator_catalogo 
+	(id_ator, id_catalogo) 
+VALUES
     (17, 6),   -- Bryan Cranston, Breaking Bad
     (18, 6),   -- Aaron Paul, Breaking Bad
     (19, 6),   -- Anna Gunn, Breaking Bad
@@ -557,7 +560,8 @@ VALUES
 
 -- ----------------------------------------------------------------
 
-INSERT INTO filme (osca, id_catalogo)
+INSERT INTO filme 
+	(osca, id_catalogo)
 VALUES
 
     (1, 1),   -- Vingadores: Ultimato possui 1 Oscar
@@ -568,7 +572,8 @@ VALUES
     
 -- -----------------------------------------------------------------
 
-INSERT INTO serie (qtd_epsodio, id_catalogo)
+INSERT INTO serie 
+	(qtd_epsodio, id_catalogo)
 VALUES
     (62, 6),   -- Breaking Bad tem 62 episódios
     (236, 7),   -- Friends tem 236 episódios
@@ -578,8 +583,8 @@ VALUES
 
 -- ----------------------------------------------------------------
 
-   -- Inserindo dados na tabela "temporada"
-INSERT INTO temporada (titulo, descricao, id_serie)
+INSERT INTO temporada 
+	(titulo, descricao, id_serie)
 VALUES
     ('Temporada 1', 'Primeira temporada da série Breaking Bad', 1),
     ('Temporada 2', 'Segunda temporada da série Breaking Bad', 1),
@@ -604,7 +609,8 @@ VALUES
     
 -- -----------------------------------------------------------------------------------
     
-INSERT INTO epsodio (numero, id_catalogo, id_temporada)
+INSERT INTO episodio 
+	(numero, id_catalogo, id_temporada)
 VALUES
     (1, 6, 1),   -- Episódio 1 da série Breaking Bad, Temporada 1
     (2, 6, 1),   -- Episódio 2 da série Breaking Bad, Temporada 1
@@ -630,7 +636,8 @@ VALUES
     
     
 -- Inserindo dados na tabela "endereco"
-INSERT INTO endereco (numero, endereco, cep, cidade, id_pais)
+INSERT INTO endereco 
+	(numero, endereco, cep, cidade, id_pais)
 VALUES
     (123, 'Rua A', '12345678', 'Buenos Aires', 3),      -- Endereço 1 (Argentina)
     (456, 'Rua B', '23456789', 'Sidney', 6),           -- Endereço 2 (Austrália)
@@ -648,14 +655,16 @@ VALUES
     
     -- --------------------------------------------------------
     
-    INSERT INTO funcionario (foto)
+INSERT INTO funcionario 
+    (foto)
 VALUES
     ('foto_funcionario1'),  -- Funcionário 1
     ('foto_funcionario2');  -- Funcionário 2
     
 -- -----------------------------------------------------------
 
-INSERT INTO plano (valor, descricao)
+INSERT INTO plano 
+	(valor, descricao)
 VALUES
     (14.90, 'Plano Bronze'),       -- Plano 1
     (29.90, 'Plano Prata'),        -- Plano 2
@@ -664,24 +673,26 @@ VALUES
     
 -- ---------------------------------------------------------
 
-INSERT INTO cartao_credito (numero, dt_nascimento, cod_seguranca, titulo)
+INSERT INTO cartao_credito 
+	(numero, dt_vencimento, cod_seguranca, titulo)
 VALUES
-    ('1111222233334444', '1990-01-01', 123, 'João Silva'),          -- Pessoa 1
-    ('2222333344445555', '1985-05-10', 456, 'Maria Souza'),         -- Pessoa 2
-    ('3333444455556666', '1992-07-15', 789, 'Pedro Santos'),        -- Pessoa 3
-    ('4444555566667777', '1988-03-25', 234, 'Ana Oliveira'),        -- Pessoa 4
-    ('5555666677778888', '1995-09-12', 567, 'Carlos Fernandes'),    -- Pessoa 5
-    ('6666777788889999', '1993-11-08', 890, 'Fernanda Costa'),      -- Pessoa 6
-    ('7777888899990000', '1997-06-20', 123, 'Eduardo Almeida'),     -- Pessoa 7
-    ('8888999900001111', '1986-02-28', 456, 'Letícia Rodrigues'),   -- Pessoa 8
-    ('9999000011112222', '1994-12-05', 789, 'Rafaela Gomes'),       -- Pessoa 9
-    ('0000111122223333', '1991-08-17', 234, 'Beatriz Santos'),      -- Pessoa 10
-    ('1111222233334444', '1998-04-30', 567, 'Felipe Costa'),        -- Pessoa 11
-    ('2222333344445555', '1987-10-22', 890, 'Gabriela Martins');    -- Pessoa 12
-    
+    ('1111222233334444', '2023-06-30', 123, 'João Silva'),          -- Pessoa 1
+    ('2222333344445555', '2023-07-31', 456, 'Maria Souza'),         -- Pessoa 2
+    ('3333444455556666', '2023-08-31', 789, 'Pedro Santos'),        -- Pessoa 3
+    ('4444555566667777', '2023-09-30', 234, 'Ana Oliveira'),        -- Pessoa 4
+    ('5555666677778888', '2023-10-31', 567, 'Carlos Fernandes'),    -- Pessoa 5
+    ('6666777788889999', '2023-11-30', 890, 'Fernanda Costa'),      -- Pessoa 6
+    ('7777888899990000', '2023-12-31', 123, 'Eduardo Almeida'),     -- Pessoa 7
+    ('8888999900001111', '2024-01-31', 456, 'Letícia Rodrigues'),   -- Pessoa 8
+    ('9999000011112222', '2024-02-29', 789, 'Rafaela Gomes'),       -- Pessoa 9
+    ('0000111122223333', '2024-03-31', 234, 'Beatriz Santos'),      -- Pessoa 10
+    ('1111222233334444', '2024-04-30', 567, 'Felipe Costa'),        -- Pessoa 11
+    ('2222333344445555', '2024-05-31', 890, 'Gabriela Martins');    -- Pessoa 12
+
     -- ---------------------------------------------------------
     
-    INSERT INTO tipo_pagamento (nome)
+INSERT INTO tipo_pagamento 
+	(nome)
 VALUES
     ('Cartão de Crédito'),
     ('Boleto Bancário'),
@@ -692,7 +703,7 @@ VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO cliente 
-(nickname, dt_vencimento, id_plano)
+	(nickname, dt_vencimento, id_plano)
 VALUES
     ('MasterGamer', '2023-06-30', 2),
     ('MusicLover', '2023-06-30', 1),
@@ -709,7 +720,8 @@ VALUES
 -- ---------------------------------------------------------------------
 
 
-INSERT INTO pagamento (valor, forma_pagamento, id_cliente, id_cartao, id_tipo_pagamento)
+INSERT INTO pagamento 
+	(valor, forma_pagamento, id_cliente, id_cartao, id_tipo_pagamento)
 VALUES
     (29.90, 'Cartão de Crédito', 1, 1, 1),
     (14.90, 'Cartão de Crédito', 2, 2, 2),
@@ -727,35 +739,68 @@ VALUES
     
 -- ----------------------------------------------------------------------------------
 
-    INSERT INTO perfil (foto, nome, tipo, id_cliente)
+INSERT INTO perfil 
+   (foto, nome, tipo, id_cliente)
 VALUES
-    (LOAD_FILE('/caminho/para/foto1.jpg'), 'João', 'perfil adulto', 1),
-    (LOAD_FILE('/caminho/para/foto2.jpg'), 'Maria', 'perfil infantil', 2),
-    (LOAD_FILE('/caminho/para/foto3.jpg'), 'Pedro', 'perfil adulto', 3),
-    (LOAD_FILE('/caminho/para/foto4.jpg'), 'Ana', 'perfil adulto', 4),
-    (LOAD_FILE('/caminho/para/foto5.jpg'), 'Lucas', 'perfil adulto', 5),
-    (LOAD_FILE('/caminho/para/foto6.jpg'), 'Julia', 'perfil infantil', 6),
-    (LOAD_FILE('/caminho/para/foto7.jpg'), 'Gabriel', 'perfil adulto', 7),
-    (LOAD_FILE('/caminho/para/foto8.jpg'), 'Carolina', 'perfil infantil', 8),
-    (LOAD_FILE('/caminho/para/foto9.jpg'), 'Rafael', 'perfil adulto', 9),
-    (LOAD_FILE('/caminho/para/foto10.jpg'), 'Isabela', 'perfil adulto', 10),
-    (LOAD_FILE('/caminho/para/foto11.jpg'), 'Matheus', 'perfil adulto', 11),
-    (LOAD_FILE('/caminho/para/foto12.jpg'), 'Laura', 'perfil infantil', 12);
+    ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
+    ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
+    ('/caminho/para/foto1.jpg', 'João', 'perfil infantil', 1),
+    ('/caminho/para/foto2.jpg', 'Maria', 'perfil adulto', 2),
+    ('/caminho/para/foto2.jpg', 'Maria', 'perfil adulto', 2),
+    ('/caminho/para/foto2.jpg', 'Maria', 'perfil infantil', 2),
+    ('/caminho/para/foto3.jpg', 'Pedro', 'perfil adulto', 3),
+    ('/caminho/para/foto3.jpg', 'Pedro', 'perfil adulto', 3),
+    ('/caminho/para/foto3.jpg', 'Pedro', 'perfil infantil', 3),
+    ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
+    ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
+    ('/caminho/para/foto4.jpg', 'Ana', 'perfil infantil', 4),
+    ('/caminho/para/foto5.jpg', 'Carlos', 'perfil adulto', 5),
+    ('/caminho/para/foto5.jpg', 'Carlos', 'perfil adulto', 5),
+    ('/caminho/para/foto5.jpg', 'Carlos', 'perfil infantil', 5),
+    ('/caminho/para/foto6.jpg', 'Fernanda', 'perfil adulto', 6),
+    ('/caminho/para/foto6.jpg', 'Fernanda', 'perfil adulto', 6),
+    ('/caminho/para/foto6.jpg', 'Fernanda', 'perfil infantil', 6),
+    ('/caminho/para/foto7.jpg', 'Eduardo', 'perfil adulto', 7),
+    ('/caminho/para/foto7.jpg', 'Eduardo', 'perfil adulto', 7),
+    ('/caminho/para/foto7.jpg', 'Eduardo', 'perfil infantil', 7),
+    ('/caminho/para/foto8.jpg', 'Letícia', 'perfil adulto', 8),
+    ('/caminho/para/foto8.jpg', 'Letícia', 'perfil adulto', 8),
+    ('/caminho/para/foto8.jpg', 'Letícia', 'perfil infantil', 8),
+    ('/caminho/para/foto9.jpg', 'Rafaela', 'perfil adulto', 9),
+    ('/caminho/para/foto9.jpg', 'Rafaela', 'perfil adulto', 9),
+    ('/caminho/para/foto9.jpg', 'Rafaela', 'perfil infantil', 9),
+    ('/caminho/para/foto10.jpg', 'Beatriz', 'perfil adulto', 10),
+    ('/caminho/para/foto10.jpg', 'Beatriz', 'perfil adulto', 10),
+    ('/caminho/para/foto10.jpg', 'Beatriz', 'perfil infantil', 10),
+    ('/caminho/para/foto11.jpg', 'Felipe', 'perfil adulto', 11),
+    ('/caminho/para/foto11.jpg', 'Felipe', 'perfil adulto', 11),
+    ('/caminho/para/foto11.jpg', 'Felipe', 'perfil infantil', 11),
+    ('/caminho/para/foto12.jpg', 'Gabriela', 'perfil adulto', 12),
+    ('/caminho/para/foto12.jpg', 'Gabriela', 'perfil adulto', 12),
+    ('/caminho/para/foto12.jpg', 'Gabriela', 'perfil infantil', 12);
+
+
+
+    -- ----------------------------------------------------------------------------------
+    
+    
+INSERT INTO usuario 
+	(nome, sobrenome, senha, data, email, status, avaliacao, dt_nascimento, dt_cadastro, id_cliente, id_funcionario, id_endereco)
+VALUES
+    ('João', 'Silva', 'senha123', '1990-01-01', 'joao.silva@example.com', 'ativo', '5', '1990-01-01', CURDATE(), 1, 1, 1),
+    ('Maria', 'Souza', 'senha456', '1992-05-10', 'maria.souza@example.com', 'ativo', '4', '1992-05-10', CURDATE(), 2, 2, 2),
+    ('Pedro', 'Santos', 'senha789', '1985-12-15', 'pedro.santos@example.com', 'ativo', '3', '1985-12-15', CURDATE(), 3, 1, 3),
+    ('Ana', 'Oliveira', 'senha123', '1998-07-20', 'ana.oliveira@example.com', 'ativo', '5', '1998-07-20', CURDATE(), 4, 2, 4),
+    ('Carlos', 'Fernandes', 'senha456', '1991-03-05', 'carlos.fernandes@example.com', 'ativo', '4', '1991-03-05', CURDATE(), 5, 1, 5),
+    ('Fernanda', 'Costa', 'senha789', '1994-09-12', 'fernanda.costa@example.com', 'ativo', '3', '1994-09-12', CURDATE(), 6, 2, 6),
+    ('Eduardo', 'Almeida', 'senha123', '1987-06-08', 'eduardo.almeida@example.com', 'ativo', '5', '1987-06-08', CURDATE(), 7, 1, 7),
+    ('Letícia', 'Rodrigues', 'senha456', '1993-02-25', 'leticia.rodrigues@example.com', 'ativo', '4', '1993-02-25', CURDATE(), 8, 2, 8),
+    ('Rafaela', 'Gomes', 'senha789', '1989-11-30', 'rafaela.gomes@example.com', 'ativo', '3', '1989-11-30', CURDATE(), 9, 1, 9),
+    ('Beatriz', 'Santos', 'senha123', '1996-08-15', 'beatriz.santos@example.com', 'ativo', '5', '1996-08-15', CURDATE(), 10, 2, 10),
+    ('Felipe', 'Costa', 'senha456', '1990-04-22', 'felipe.costa@example.com', 'ativo', '4', '1990-04-22', CURDATE(), 11, 1, 11),
+    ('Gabriela', 'Martins', 'senha789', '1995-10-18', 'gabriela.martins@example.com', 'ativo', '3', '1995-10-18', CURDATE(), 12, 2, 12);
+
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     

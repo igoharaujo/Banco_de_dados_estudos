@@ -137,8 +137,8 @@ CREATE TABLE IF NOT EXISTS plano(
 CREATE TABLE IF NOT EXISTS cartao_credito(
 	id_cartao INT PRIMARY KEY AUTO_INCREMENT,
     numero VARCHAR(16) NOT NULL,
-    dt_nascimento DATE NOT NULL,
-    cod_seguranca TINYINT NOT NULL,
+    dt_vencimento DATE NOT NULL,
+    cod_seguranca INT NOT NULL,
     titulo VARCHAR(45) NOT NULL
 )auto_increment = 1;
 
@@ -195,4 +195,5 @@ CONSTRAINT fk_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario
 CONSTRAINT fk_id_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id_endreco)
 )auto_increment = 1;
 
--- drop database streamer;
+
+ -- drop database streamer;
