@@ -228,15 +228,15 @@ VALUES
     
 -- --------------------------------------------------------------------------
 
-INSERT INTO classificacao 
-	(idade, descricao) 
-VALUES
-	('Livre', 'Apropriado para todas as idades'),
-	('10', 'Apropriado para maiores de 10 anos'),
-	('12', 'Apropriado para maiores de 12 anos'),
-	('14', 'Apropriado para maiores de 14 anos'),
-	('16', 'Apropriado para maiores de 16 anos'),
-	('18', 'Apropriado para maiores de 18 anos');
+    INSERT INTO classificacao 
+		(idade, descricao) 
+	VALUES
+		('Livre', 'Apropriado para todas as idades'),
+		('10', 'Apropriado para maiores de 10 anos'),
+		('12', 'Apropriado para maiores de 12 anos'),
+		('14', 'Apropriado para maiores de 14 anos'),
+		('16', 'Apropriado para maiores de 16 anos'),
+		('18', 'Apropriado para maiores de 18 anos');
         
 -- --------------------------------------------------------------------------
 
@@ -354,11 +354,11 @@ VALUES
     ('Interestelar', 'Um grupo de exploradores parte em uma missão espacial para salvar a humanidade.', 2014, '02:49:00', '4', 2, 3),
 
 -- Inserindo Séries
-    ('Breaking Bad', 'Um professor de química se envolve com o tráfico de drogas.', 2008, '02:37:00', '5', 1, 4),
-    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '02:42:00', '4', 2, 2),
-    ('Game of Thrones', 'As famílias nobres lutam pelo controle do Trono de Ferro.', 2011, '02:42:00', '5', 1, 5),
-    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '03:52:00', '4', 3, 3),
-    ('The Crown', 'A vida da rainha Elizabeth II desde o início de seu reinado.', 2016, '01:58:00', '5', 2, 4);
+    ('Breaking Bad', 'Um professor de química se envolve com o tráfico de drogas.', 2008, '00:49:00', '5', 1, 4),
+    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '00:22:00', '4', 2, 2),
+    ('Game of Thrones', 'As famílias nobres lutam pelo controle do Trono de Ferro.', 2011, '00:57:00', '5', 1, 5),
+    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '00:51:00', '4', 3, 3),
+    ('The Crown', 'A vida da rainha Elizabeth II desde o início de seu reinado.', 2016, '00:58:00', '5', 2, 4);
     
 -- ---------------------------------------------------------------------------
 
@@ -486,12 +486,11 @@ VALUES
 -- Filmes
 INSERT INTO ator_catalogo 
 	(id_ator, id_catalogo) 
-VALUES    
+VALUES
     (1, 1),    -- Robert Downey Jr., Vingadores: Ultimato
     (2, 1),    -- Chris Evans, Vingadores: Ultimato
     (3, 1),    -- Mark Ruffalo, Vingadores: Ultimato
     (4, 1),    -- Chris Hemsworth, Vingadores: Ultimato
-    
     
     (5, 2),    -- Leonardo DiCaprio, A Origem
     (6, 2),    -- Joseph Gordon-Levitt, A Origem
@@ -574,16 +573,17 @@ VALUES
 -- -----------------------------------------------------------------
 
 INSERT INTO serie 
-	(id_catalogo)
+	(qtd_epsodio, id_catalogo)
 VALUES
-    (6),   -- Breaking Bad tem 62 episódios
-    (7),   -- Friends tem 236 episódios
-    (8),   -- Game of Thrones tem 73 episódios
-    (9),   -- Stranger Things tem 34 episódios
-    (10);  -- The Crown tem 50 episódios
+    (62, 6),   -- Breaking Bad tem 62 episódios
+    (236, 7),   -- Friends tem 236 episódios
+    (73, 8),   -- Game of Thrones tem 73 episódios
+    (34, 9),   -- Stranger Things tem 34 episódios
+    (50, 10);  -- The Crown tem 50 episódios
 
 -- ----------------------------------------------------------------
 
+    
 INSERT INTO temporada 
 	(titulo, descricao, id_serie)
 VALUES
@@ -606,12 +606,11 @@ VALUES
     
     ('Temporada 1 - Reinado Inicial', 'Primeira temporada da série The Crown', 5),
     ('Temporada 2 - Crises da Coroa', 'Segunda temporada da série The Crown', 5);
-    
 -- -----------------------------------------------------------------------------------
     
 
 INSERT INTO episodio 
-	(nome, id_serie, duracao, id_temporada)
+	(nome, id_catalogo, duracao, id_temporada)
 VALUES
     ('Piloto', 1, '00:47:00', 1),   						   		  -- Episódio 1 da série Breaking Bad, Temporada 1
     ('O Gato Está na Bolsa', 1, '00:49:00', 1),   			   		  -- Episódio 2 da série Breaking Bad, Temporada 1
@@ -650,7 +649,7 @@ VALUES
 	('Rumo ao Trono', 5, '00:42:00', 14),                               -- Episódio 3 da série The Crown, Temporada 1
     ('A Coroa em Crise', 5, '00:46:00', 14),                            -- Episódio 4 da série The Crown, Temporada 1
     ('Reinado de Incertezas', 5, '00:44:00', 15);                       -- Episódio 5 da série The Crown, Temporada 2
--- Insira os demais episódios da série The Crown aqui
+
 
 
 -- ----------------------------------------------------------------------------------------
@@ -660,9 +659,8 @@ VALUES
 INSERT INTO endereco 
 	(numero, endereco, cep, cidade, id_pais)
 VALUES
--- clientes
     (123, 'Rua A', '12345678', 'Buenos Aires', 3),      -- Endereço 1 (Argentina)
-    (456, 'Rua B', '23456789', 'Sidney', 6),            -- Endereço 2 (Austrália)
+    (456, 'Rua B', '23456789', 'Sidney', 6),           -- Endereço 2 (Austrália)
     (789, 'Rua C', '34567890', 'Viena', 7),             -- Endereço 3 (Áustria)
     (234, 'Rua D', '45678901', 'Baku', 8),              -- Endereço 4 (Azerbaijão)
     (567, 'Rua E', '56789012', 'Nassau', 9),            -- Endereço 5 (Bahamas)
@@ -672,50 +670,18 @@ VALUES
     (789, 'Rua I', '90123456', 'Minsk', 14),            -- Endereço 9 (Belarus)
     (234, 'Rua J', '01234567', 'Bruxelas', 15),         -- Endereço 10 (Bélgica)
     (567, 'Rua K', '12345678', 'Belmopan', 16),         -- Endereço 11 (Belize)
-    (890, 'Rua L', '23456789', 'Cotonou', 17),          -- Endereço 12 (Benin)
+    (890, 'Rua L', '23456789', 'Cotonou', 17);          -- Endereço 12 (Benin)
     
--- funcionarios
-	(123, 'Rua M', '34567890', 'Brasília', 224),         -- Endereço 13 (Brasil)
-    (456, 'Rua N', '45678901', 'São Paulo', 224),        -- Endereço 14 (Brasil)
-    (789, 'Rua O', '56789012', 'Rio de Janeiro', 224),   -- Endereço 15 (Brasil)
-    (234, 'Rua P', '67890123', 'Salvador', 224);         -- Endereço 16 (Brasil)
     
--- ---------------------------------------------------------
-    
-INSERT INTO pessoa 
-	(nome, sobrenome, senha, email, status, avaliacao, dt_nascimento, dt_cadastro, id_endereco)
-VALUES
--- clientes
-	('João', 'Silva', 'senha123', 'joao.silva@example.com', 'ativo', '5', '1990-01-01', CURDATE(), 1),
-	('Maria', 'Souza', 'senha456', 'maria.souza@example.com', 'ativo', '4', '1992-05-10', CURDATE(), 2),
-	('Pedro', 'Santos', 'senha789', 'pedro.santos@example.com', 'ativo', '3', '1985-12-15', CURDATE(), 3),
-	('Ana', 'Oliveira', 'senha123', 'ana.oliveira@example.com', 'ativo', '5', '1998-07-20', CURDATE(), 4),
-	('Carlos', 'Fernandes', 'senha456', 'carlos.fernandes@example.com', 'ativo', '4', '1991-03-05', CURDATE(), 5),
-	('Fernanda', 'Costa', 'senha789', 'fernanda.costa@example.com', 'ativo', '3', '1994-09-12', CURDATE(), 6),
-	('Eduardo', 'Almeida', 'senha123', 'eduardo.almeida@example.com', 'ativo', '5', '1987-06-08', CURDATE(), 7),
-	('Letícia', 'Rodrigues', 'senha456', 'leticia.rodrigues@example.com', 'ativo', '4', '1993-02-25', CURDATE(), 8),
-	('Rafaela', 'Gomes', 'senha789', 'rafaela.gomes@example.com', 'ativo', '3', '1989-11-30', CURDATE(), 9),
-	('Beatriz', 'Santos', 'senha123', 'beatriz.santos@example.com', 'ativo', '5', '1996-08-15', CURDATE(), 10),
-	('Felipe', 'Costa', 'senha456', 'felipe.costa@example.com', 'ativo', '4', '1990-04-22', CURDATE(), 11),
-	('Gabriela', 'Martins', 'senha789', 'gabriela.martins@example.com', 'ativo', '3', '1995-10-18', CURDATE(), 12),
-    
--- funcionarios
-	('John', 'Doe', 'senha123', 'john.doe@example.com', 'ativo', '5', '1990-01-01', CURDATE(), 13),
-    ('Jane', 'Smith', 'senha456', 'jane.smith@example.com', 'ativo', '4', '1992-05-10', CURDATE(), 14),
-    ('Mark', 'Johnson', 'senha789', 'mark.johnson@example.com', 'ativo', '3', '1985-12-15', CURDATE(), 15),
-    ('Emily', 'Davis', 'senha123', 'emily.davis@example.com', 'ativo', '5', '1998-07-20', CURDATE(), 16);
-    
--- --------------------------------------------------------
+    -- --------------------------------------------------------
     
 INSERT INTO funcionario 
-	(foto, id_pessoa)
+    (foto)
 VALUES
-    ('foto_funcionario1.png', 13),  -- John Doe
-    ('foto_funcionario2.png', 14),  -- Jane Smith
-    ('foto_funcionario3.png', 15),  -- Mark Johnson
-    ('foto_funcionario4.png', 16);  -- Emily Davis
- 
--- -------------------------------------------------------------
+    ('foto_funcionario1'),  -- Funcionário 1
+    ('foto_funcionario2');  -- Funcionário 2
+    
+-- -----------------------------------------------------------
 
 INSERT INTO plano 
 	(valor, descricao)
@@ -757,21 +723,20 @@ VALUES
 -- -------------------------------------------------------------
 
 INSERT INTO cliente 
-	(nickname, dt_vencimento, id_plano, id_pessoa)
+	(nickname, dt_vencimento, id_plano)
 VALUES
-    ('MasterGamer', '2023-07-15', 2, 1),         -- plano Prata (João)
-    ('MusicLover', '2023-08-20', 1, 2),           -- plano Bronze (Maria)
-    ('AdventureSeeker', '2023-09-10', 3, 3),      -- plano Ouro (Pedro)
-    ('FitnessEnthusiast', '2023-10-05', 4, 4),    -- plano Diamante (Ana)
-    ('Bookworm', '2023-11-25', 2, 5),             -- plano Prata (Carlos)
-    ('MovieBuff', '2023-12-12', 3, 6),            -- plano Ouro (Fernanda)
-    ('Foodie', '2024-01-08', 1, 7),               -- plano Bronze (Eduardo)
-    ('NatureLover', '2024-02-15', 4, 8),          -- plano Diamante (Letícia)
-    ('TechGeek', '2024-03-20', 2, 9),             -- plano Prata (Rafaela)
-    ('ArtEnthusiast', '2024-04-18', 3, 10),       -- plano Ouro (Beatriz)
-    ('Fashionista', '2024-05-10', 1, 11),         -- plano Bronze (Felipe)
-    ('Traveler', '2024-06-05', 4, 12);            -- plano Diamante (Gabriela)
-
+    ('MasterGamer', '2023-06-30', 2),
+    ('MusicLover', '2023-06-30', 1),
+    ('AdventureSeeker', '2023-06-30', 3),
+    ('FitnessEnthusiast', '2023-06-30', 4),
+    ('Bookworm', '2023-06-30', 2),
+    ('MovieBuff', '2023-06-30', 3),
+    ('Foodie', '2023-06-30', 1),
+    ('NatureLover', '2023-06-30', 4),
+    ('TechGeek', '2023-06-30', 2),
+    ('ArtEnthusiast', '2023-06-30', 3),
+    ('Fashionista', '2023-06-30', 1),
+    ('Traveler', '2023-06-30', 4);
 -- ---------------------------------------------------------------------
 
 
@@ -835,6 +800,25 @@ VALUES
     ('/caminho/para/foto12.jpg', 'Gabriela', 'perfil infantil', 12);
 
 
+
+    -- ----------------------------------------------------------------------------------
+    
+    
+INSERT INTO usuario 
+	(nome, sobrenome, senha, data, email, status, avaliacao, dt_nascimento, dt_cadastro, id_cliente, id_funcionario, id_endereco)
+VALUES
+    ('João', 'Silva', 'senha123', '1990-01-01', 'joao.silva@example.com', 'ativo', '5', '1990-01-01', CURDATE(), 1, 1, 1),
+    ('Maria', 'Souza', 'senha456', '1992-05-10', 'maria.souza@example.com', 'ativo', '4', '1992-05-10', CURDATE(), 2, 2, 2),
+    ('Pedro', 'Santos', 'senha789', '1985-12-15', 'pedro.santos@example.com', 'ativo', '3', '1985-12-15', CURDATE(), 3, 1, 3),
+    ('Ana', 'Oliveira', 'senha123', '1998-07-20', 'ana.oliveira@example.com', 'ativo', '5', '1998-07-20', CURDATE(), 4, 2, 4),
+    ('Carlos', 'Fernandes', 'senha456', '1991-03-05', 'carlos.fernandes@example.com', 'ativo', '4', '1991-03-05', CURDATE(), 5, 1, 5),
+    ('Fernanda', 'Costa', 'senha789', '1994-09-12', 'fernanda.costa@example.com', 'ativo', '3', '1994-09-12', CURDATE(), 6, 2, 6),
+    ('Eduardo', 'Almeida', 'senha123', '1987-06-08', 'eduardo.almeida@example.com', 'ativo', '5', '1987-06-08', CURDATE(), 7, 1, 7),
+    ('Letícia', 'Rodrigues', 'senha456', '1993-02-25', 'leticia.rodrigues@example.com', 'ativo', '4', '1993-02-25', CURDATE(), 8, 2, 8),
+    ('Rafaela', 'Gomes', 'senha789', '1989-11-30', 'rafaela.gomes@example.com', 'ativo', '3', '1989-11-30', CURDATE(), 9, 1, 9),
+    ('Beatriz', 'Santos', 'senha123', '1996-08-15', 'beatriz.santos@example.com', 'ativo', '5', '1996-08-15', CURDATE(), 10, 2, 10),
+    ('Felipe', 'Costa', 'senha456', '1990-04-22', 'felipe.costa@example.com', 'ativo', '4', '1990-04-22', CURDATE(), 11, 1, 11),
+    ('Gabriela', 'Martins', 'senha789', '1995-10-18', 'gabriela.martins@example.com', 'ativo', '3', '1995-10-18', CURDATE(), 12, 2, 12);
 
 
     

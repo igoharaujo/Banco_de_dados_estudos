@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS streamer
+CREATE DATABASE IF NOT EXISTS test2
 COLLATE utf8mb4_general_ci
 CHARSET utf8mb4;
 
 
-use streamer;
+use test2;
 
 CREATE TABLE IF NOT EXISTS pais(
 	id_pais INT PRIMARY KEY auto_increment AUTO_INCREMENT,
@@ -89,6 +89,7 @@ CONSTRAINT fk_catalogo_filme FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_cat
 
 CREATE TABLE IF NOT EXISTS serie(
 	id_serie INT PRIMARY KEY AUTO_INCREMENT,
+    qtd_epsodio INT,
     id_catalogo INT,
 CONSTRAINT fk_catalogo_serie FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_catalogo)
 )auto_increment = 1;
@@ -103,18 +104,18 @@ CONSTRAINT fk_serie FOREIGN KEY(id_serie) REFERENCES serie(id_serie)
 
 CREATE TABLE IF NOT EXISTS episodio(
 	id_episodio INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100),
+    nome varchar(100),
+    id_catalogo INT,
     duracao TIME,
     id_temporada INT,
-    id_serie INT,
-CONSTRAINT fk_serie_epsodio FOREIGN KEY(id_serie) REFERENCES serie(id_serie),
+CONSTRAINT fk_catalogo_epsodio FOREIGN KEY(id_catalogo) REFERENCES catalogo(id_catalogo),
 CONSTRAINT fk_temporada FOREIGN KEY(id_temporada) REFERENCES temporada(id_temporada)
 )auto_increment = 1;
 
 -- ----------------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS endereco(
-	id_endereco INT PRIMARY KEY AUTO_INCREMENT,
+	id_endreco INT PRIMARY KEY AUTO_INCREMENT,
     numero SMALLINT,
     endereco VARCHAR(45) NOT NULL, 
     cep CHAR(8) NOT NULL,
@@ -123,25 +124,9 @@ CREATE TABLE IF NOT EXISTS endereco(
 CONSTRAINT fk_pais_endereco FOREIGN KEY (id_pais) REFERENCES pais(id_pais)
 )auto_increment = 1;
     
-CREATE TABLE IF NOT EXISTS pessoa(
-	id_pessoa INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(32) NOT NULL,
-    sobrenome VARCHAR(45) NOT NULL,
-    senha VARCHAR(32) NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    status VARCHAR(45),
-    avaliacao ENUM('1','2','3','4','5'),
-    dt_nascimento DATE NOT NULL,
-    dt_cadastro DATE DEFAULT (CURDATE()) NOT NULL,
-    id_endereco INT,
-CONSTRAINT fk_id_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id_endereco)
-)auto_increment = 1;
-
 CREATE TABLE IF NOT EXISTS funcionario(
 	id_funcionario INT PRIMARY KEY AUTO_INCREMENT,
-    foto TINYBLOB,
-    id_pessoa INT,
-CONSTRAINT fk_funcionario_pessoa FOREIGN KEY(id_funcionario) REFERENCES pessoa(id_pessoa)
+    foto TINYBLOB
 )auto_increment = 1;
 
 CREATE TABLE IF NOT EXISTS plano(
@@ -168,8 +153,6 @@ CREATE TABLE IF NOT EXISTS cliente(
     nickname VARCHAR(32) NOT NULL,
     dt_vencimento DATE NOT NULL,
     id_plano INT,
-    id_pessoa INT,
-constraint fk_cliente_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoa(id_pessoa),
 CONSTRAINT fk_cliente_plano FOREIGN KEY (id_plano) REFERENCES plano(id_plano)
 )auto_increment = 1;
 
@@ -194,6 +177,23 @@ CREATE TABLE IF NOT EXISTS perfil(
 CONSTRAINT fk_id_cliente_perfil FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
 )auto_increment = 1;
 
+CREATE TABLE IF NOT EXISTS usuario(
+	id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(32) NOT NULL,
+    sobrenome VARCHAR(45) NOT NULL,
+    senha VARCHAR(32) NOT NULL,
+    data DATE NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    status VARCHAR(45),
+    avaliacao ENUM('1','2','3','4','5'),
+    dt_nascimento DATE NOT NULL,
+    dt_cadastro DATE DEFAULT (CURDATE()) NOT NULL,
+    id_cliente INT,
+    id_funcionario INT,
+    id_endereco INT,
+CONSTRAINT fk_id_cliente_usuario FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+CONSTRAINT fk_id_funcionario FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario), 
+CONSTRAINT fk_id_endereco FOREIGN KEY (id_endereco) REFERENCES endereco(id_endreco)
+)auto_increment = 1;
 
-
- -- drop database streamer;
+-- drop database test2;
