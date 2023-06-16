@@ -354,11 +354,11 @@ VALUES
     ('Interestelar', 'Um grupo de exploradores parte em uma missão espacial para salvar a humanidade.', 2014, '02:49:00', '4', 2, 3),
 
 -- Inserindo Séries
-    ('Breaking Bad', 'Um professor de química se envolve com o tráfico de drogas.', 2008, '04:39:00', '5', 1, 4),
-    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '04:40:00', '4', 2, 2),
-    ('Game of Thrones', 'As famílias nobres lutam pelo controle do Trono de Ferro.', 2011, '04:50:00', '5', 1, 5),
-    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '05:32:00', '4', 3, 3),
-    ('The Crown', 'A vida da rainha Elizabeth II desde o início de seu reinado.', 2016, '03:27:00', '5', 2, 4);
+    ('Breaking Bad', 'Um professor de química se envolve com o tráfico de drogas.', 2008, '02:37:00', '5', 1, 4),
+    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '02:42:00', '4', 2, 2),
+    ('Game of Thrones', 'As famílias nobres lutam pelo controle do Trono de Ferro.', 2011, '02:42:00', '5', 1, 5),
+    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '03:52:00', '4', 3, 3),
+    ('The Crown', 'A vida da rainha Elizabeth II desde o início de seu reinado.', 2016, '01:58:00', '5', 2, 4);
     
 -- ---------------------------------------------------------------------------
 
@@ -616,9 +616,9 @@ VALUES
     ('Piloto', 1, '00:47:00', 1),   						   		  -- Episódio 1 da série Breaking Bad, Temporada 1
     ('O Gato Está na Bolsa', 1, '00:49:00', 1),   			   		  -- Episódio 2 da série Breaking Bad, Temporada 1
     ('A Bolsa Está no Rio', 1, '00:46:00', 1),  		  		      -- Episódio 3 da série Breaking Bad, Temporada 1
-    ('Aquele com o Unagi', 1, '00:45:00', 2),   					  -- Episódio 4 da série Breaking Bad, Temporada 2
-    ('Aquele com o Dia do Bolo', 1, '00:43:00', 2),                   -- Episódio 5 da série Breaking Bad, Temporada 2
-    ('Aquele com a Rotina', 1, '00:49:00', 3),   			          -- Episódio 6 da Breaking Bad, Temporada 3
+    ('Aquele com o Unagi', 1, '00:45:00', 2),   					  -- Episódio 4 da série Friends, Temporada 2
+    ('Aquele com o Dia do Bolo', 1, '00:43:00', 2),                   -- Episódio 5 da série Friends, Temporada 2
+    ('Aquele com a Rotina', 1, '00:49:00', 3),   			          -- Episódio 6 da série Friends, Temporada 3
 -- Insira os demais episódios da série Breaking Bad aqui
 
     ('Aquele com o Macaco', 2, '00:47:00', 4),   					   -- Episódio 1 da série Friends, Temporada 1
@@ -799,8 +799,6 @@ INSERT INTO perfil
 VALUES
     ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
     ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
-     ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
-    ('/caminho/para/foto1.jpg', 'João', 'perfil adulto', 1),
     ('/caminho/para/foto1.jpg', 'João', 'perfil infantil', 1),
     ('/caminho/para/foto2.jpg', 'Maria', 'perfil adulto', 2),
     ('/caminho/para/foto2.jpg', 'Maria', 'perfil adulto', 2),
@@ -808,8 +806,6 @@ VALUES
     ('/caminho/para/foto3.jpg', 'Pedro', 'perfil adulto', 3),
     ('/caminho/para/foto3.jpg', 'Pedro', 'perfil adulto', 3),
     ('/caminho/para/foto3.jpg', 'Pedro', 'perfil infantil', 3),
-    ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
-    ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
     ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
     ('/caminho/para/foto4.jpg', 'Ana', 'perfil adulto', 4),
     ('/caminho/para/foto4.jpg', 'Ana', 'perfil infantil', 4),

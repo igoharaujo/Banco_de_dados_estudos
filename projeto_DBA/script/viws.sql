@@ -36,24 +36,16 @@ GROUP BY p.id_pessoa, tipo_usuario, numero_endereco, endereco, cep, cidade, pais
  
  -- vw_catalogo -------------------------------------------
  CREATE VIEW vw_catalogo AS
- SELECT c.id_catalogo,
-    IF(f.id_filme IS NOT NULL, 'filme', 'serie') AS identificacao,
-    c.titulo,
-    c.sinopse,
-    c.ano_lancamento,
-    c.duracao,
-    c.avaliacao,
-    i.nome AS idioma_original,
-    (
-        SELECT GROUP_CONCAT(i2.nome SEPARATOR ', ')
-        FROM idioma_catalogo ic
-        JOIN idioma i2 ON ic.id_idioma = i2.id_idioma
-        WHERE ic.id_catalogo = c.id_catalogo
-    ) AS outros_idiomas
-FROM catalogo c
-LEFT JOIN filme f ON c.id_catalogo = f.id_catalogo
-LEFT JOIN serie s ON c.id_catalogo = s.id_catalogo
-LEFT JOIN idioma i ON c.idioma_original = i.id_idioma;
+ SELECT c.id_catalogo
+ ,if (f.id_filme IS NOT NULL, 'filme', 'serie') AS identificação
+ , c.titulo
+ , c.sinopse
+ , c.ano_lancamento
+ , c.duracao
+ , c.avaliacao
+ FROM catalogo c 
+ left join filme f ON c.id_catalogo = f.id_catalogo
+ left join serie s ON s.id_catalogo = f.id_catalogo;
  
  select * from vw_catalogo;
  
@@ -104,108 +96,8 @@ GROUP BY a.nome;
 
 SELECT * FROM vw_ator;
 
-
-
-
 -- vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
 
-select 
-p.nome
-,p.status
-,pl.descricao as plano
-,pa.valor
-,tp.nome tipo_pagamento
-from pessoa p INNER JOIN cliente c ON p.id_pessoa = c.id_pessoa
-INNER JOIN plano pl ON pl.id_plano = c.id_plano LEFT JOIN pagamento pa ON pa.id_cliente = c.id_cliente
-INNER JOIN tipo_pagamento tp ON tp.id_tipo_pagamento = pa.id_tipo_pagamento;
-SELECT * FROM pagamento;
- 
- 
- select * from pagamento;
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- -- vw_perfil -------------------------------------------------
-CREATE VIEW vw_perfil AS
-SELECT pe.id_perfil
-       ,p.nome as cliente
-       ,COUNT(pe.id_cliente) AS total_perfil
-       ,(SELECT GROUP_CONCAT(p.tipo SEPARATOR ', ')
-        FROM perfil p JOIN cliente c 
-        ON p.id_cliente = c.id_cliente
-        WHERE c.id_pessoa = p.id_pessoa) as tipo_perfil
-FROM pessoa p
-LEFT JOIN cliente c ON c.id_pessoa = p.id_pessoa
-LEFT JOIN perfil pe ON pe.id_cliente = c.id_cliente
-WHERE c.id_cliente IS NOT NULL
-GROUP BY p.nome;
-
-SELECT * FROM vw_perfil;
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
- 
- /*
- SELECT c.titulo, COUNT(t.id_serie) AS temporada
-FROM catalogo c
-INNER JOIN serie s ON s.id_catalogo = c.id_catalogo
-LEFT JOIN temporada t ON t.id_serie = s.id_serie
-GROUP BY c.titulo;
-
- 
-select * from serie;
- 
-SELECT s.id_serie, c.titulo, SEC_TO_TIME(SUM(TIME_TO_SEC(e.duracao))) AS duracao_total
-FROM catalogo c
-INNER JOIN serie s ON c.id_catalogo = s.id_catalogo
-LEFT JOIN temporada t ON s.id_serie = t.id_serie
-LEFT JOIN episodio e ON t.id_temporada = e.id_temporada
-GROUP BY s.id_serie, c.titulo;
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+select * from pagamento;
 
 
