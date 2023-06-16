@@ -108,7 +108,7 @@ SELECT * FROM vw_ator;
 
 
 -- vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
-
+CREATE VIEW vw_pagamento AS
 select 
 p.nome
 ,p.status
@@ -120,20 +120,7 @@ INNER JOIN plano pl ON pl.id_plano = c.id_plano LEFT JOIN pagamento pa ON pa.id_
 INNER JOIN tipo_pagamento tp ON tp.id_tipo_pagamento = pa.id_tipo_pagamento;
 SELECT * FROM pagamento;
  
- 
  select * from pagamento;
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
  -- vw_perfil -------------------------------------------------
 CREATE VIEW vw_perfil AS
@@ -152,21 +139,7 @@ GROUP BY p.nome;
 
 SELECT * FROM vw_perfil;
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
  
  
 
