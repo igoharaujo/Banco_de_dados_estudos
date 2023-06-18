@@ -1,9 +1,9 @@
-CREATE DATABASE IF NOT EXISTS streamer
+CREATE DATABASE IF NOT EXISTS streaming
 COLLATE utf8mb4_general_ci
 CHARSET utf8mb4;
 
 
-use streamer;
+use streaming;
 
 CREATE TABLE IF NOT EXISTS pais(
 	id_pais INT PRIMARY KEY auto_increment AUTO_INCREMENT,
