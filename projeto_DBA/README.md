@@ -3,8 +3,6 @@
 
 # Projeto Streaming
 
-
-
 Esse é um projeto de banco de dados visando criar uma estrutura de dados para armazenar informações de serviço de conteúdos multimídia e demonstrar o conteúdo aprendido no curso de **DBA**. O projeto foi desenvolvido utilizando o sistema de gerenciamento MySQL para garantir a eficácia e confiabilidade na gestão dos dados.
 
 
@@ -18,214 +16,211 @@ Esse é um projeto de banco de dados visando criar uma estrutura de dados para a
 ![Modelo conceitual](./img/fisico.png)
 </div>
 
-#
-
 <div align=center>
 
 ## Tabelas
 </div>
 
-#
 
 
-<div align=center>
 
- Tabela `país`
+- Tabela `país`:
 
-| id_pais | nome   | codigo |
-|---------|--------|--------|
-| 1       | Brasil | BR     |
-| 2       | EUA    | US     |
-| ...     | ...    | ...    |
-#
- Tabela `classificacao`
+    | id_pais | nome   | codigo |
+    |---------|--------|--------|
+    | 1       | Brasil | BR     |
+    | 2       | EUA    | US     |
+    | ...     | ...    | ...    |
 
-| id_classificacao | idade | descricao |
-|------------------|-------|-----------|
-| 1                | 18    | Adulto    |
-| 2                | 8     | Infantil  |
-| ...              | ...   | ...       |
-#
-Tabela `ator`
+- Tabela `classificacao`:
 
-| id_ator | nome   | sobrenome | nascimento | foto |
-|---------|--------|-----------|------------|------|
-| 1       | João   | Silva     | 1980-01-01 | ...  |
-| 2       | Maria  | Santos    | 1995-05-10 | ...  |
-| ...     | ...    | ...       | ...        | ...  |
-#
-Tabela `idioma`
+    | id_classificacao | idade | descricao |
+    |------------------|-------|-----------|
+    | 1                | 18    | Adulto    |
+    | 2                | 8     | Infantil  |
+    | ...              | ...   | ...       |
 
-| id_idioma | nome      |
-|-----------|-----------|
-| 1         | Português |
-| 2         | Inglês    |
-| ...       | ...       |
-#
-Tabela `categoria`
+- Tabela `ator`:
 
-| id_categoria | nome      |
-|--------------|-----------|
-| 1            | Ação      |
-| 2            | Comédia   |
-| ...          | ...       |
-#
-Tabela `catalogo`
+    | id_ator | nome   | sobrenome | nascimento | foto |
+    |---------|--------|-----------|------------|------|
+    | 1       | João   | Silva     | 1980-01-01 | ...  |
+    | 2       | Maria  | Santos    | 1995-05-10 | ...  |
+    | ...     | ...    | ...       | ...        | ...  |
 
-| id_catalogo | titulo     | sinopse | ano_lancamento | duracao | avaliacao | idioma_original | id_classificacao |
-|-------------|------------|---------|----------------|---------|-----------|-----------------|------------------|
-| 1           | Filme A    | ...     | 2022           | 02:30   | 4         | 1               | 1                |
-| 2           | Série B    | ...     | 2021           | 00:45   | 3         | 2               | 2                |
-| ...         | ...        | ...     | ...            | ...     | ...       | ...             | ...              |
-#
-Tabela `pais_catalogo`
+- Tabela `idioma`:
 
-| id_pais | id_catalogo |
-|---------|-------------|
-| 1       | 1           |
-| 1       | 2           |
-| ...     | ...         |
-#
-Tabela `idioma_catalogo`
+    | id_idioma | nome      |
+    |-----------|-----------|
+    | 1         | Português |
+    | 2         | Inglês    |
+    | ...       | ...       |
 
-| id_idioma | id_catalogo |
-|-----------|-------------|
-| 1         | 1           |
-| 2         | 2           |
-| ...       | ...         |
-#
- Tabela `ator_catalogo`
+- Tabela `categoria`:
 
-| id_ator | id_catalogo |
-|---------|-------------|
-| 1       | 1           |
-| 2       | 1           |
-| ...     | ...         |
-#
-Tabela `categoria_catalogo`
+    | id_categoria | nome      |
+    |--------------|-----------|
+    | 1            | Ação      |
+    | 2            | Comédia   |
+    | ...          | ...       |
 
-| id_categoria | id_catalogo |
-|--------------|-------------|
-| 1            | 1           |
-| 2            | 1           |
-| ...          | ...         |
-#
-Tabela `filme`
+- Tabela `catalogo`:
 
-| id_filme | osca | id_catalogo |
-|----------|------|-------------|
-| 1        | null | 1           |
-| 2        | null | 2           |
-| ...
-#
-Tabela `serie`
+    | id_catalogo | titulo     | sinopse | ano_lancamento | duracao | avaliacao | idioma_original | id_classificacao |
+    |-------------|------------|---------|----------------|---------|-----------|-----------------|------------------|
+    | 1           | Filme A    | ...     | 2022           | 02:30   | 4         | 1               | 1                |
+    | 2           | Série B    | ...     | 2021           | 00:45   | 3         | 2               | 2                |
+    | ...         | ...        | ...     | ...            | ...     | ...       | ...             | ...              |
 
-| id_serie | id_catalogo |
-|----------|-------------|
-| 1        | 2           |
-| 2        | 3           |
-| ...      | ...         |
-#
-Tabela `temporada`
+- Tabela `pais_catalogo`:
 
-| id_temporada | titulo | descricao | id_serie |
-|--------------|--------|-----------|----------|
-| 1            | Temporada 1 | ... | 1        |
-| 2            | Temporada 2 | ... | 1        |
-| ...          | ...    | ...       | ...      |
-#
-Tabela `episodio`
+    | id_pais | id_catalogo |
+    |---------|-------------|
+    | 1       | 1           |
+    | 1       | 2           |
+    | ...     | ...         |
 
-| id_episodio | nome | duracao | id_temporada | id_serie |
-|-------------|------|---------|--------------|----------|
-| 1           | Episódio 1 | 00:30 | 1            | 1        |
-| 2           | Episódio 2 | 00:30 | 1            | 1        |
-| ...         | ...  | ...     | ...          | ...      |
-#
-Tabela `endereco`
-| id_endereco | numero | endereco | cep      | cidade  | id_pais |
-|-------------|--------|----------|----------|---------|---------|
-| 1           | 123    | Rua A    | 12345678 | CidadeA | 1       |
-| 2           | 456    | Rua B    | 87654321 | CidadeB | 2       |
-| ...         | ...    | ...      | ...      | ...     | ...     |
-#
-Tabela `pessoa`
+- Tabela `idioma_catalogo`:
 
-| id_pessoa | nome  | sobrenome | senha | email                 | status | avaliacao | dt_nascimento | dt_cadastro | id_endereco |
-|-----------|-------|-----------|-------|-----------------------|--------|-----------|---------------|-------------|-------------|
-| 1         | João  | Silva     | ...   | joao.silva@example.com | ...    | 4         | 1980-01-01    | ...         | 1           |
-| 2         | Maria | Santos    | ...   | maria.santos@example.com | ...  | 3         | 1995-05-10    | ...         | 2           |
-| ...       | ...   | ...       | ...   | ...                   | ...    | ...       | ...           | ...         | ...         |
-#
-Tabela `funcionario`
+    | id_idioma | id_catalogo |
+    |-----------|-------------|
+    | 1         | 1           |
+    | 2         | 2           |
+    | ...       | ...         |
 
-| id_funcionario | foto | id_pessoa |
-|----------------|------|-----------|
-| 1              | ...  | 1         |
-| 2              | ...  | 2         |
-| ...            | ...  | ...       |
-#
-Tabela `plano`
+- Tabela `ator_catalogo`:
 
-| id_plano | valor | descricao |
-|----------|-------|-----------|
-| 1        | 9.99  | Bronze    |
-| 2        | 14.99 | Prata     |
-| ...      | ...   | ...       |
-#
-Tabela `cartao_credito`
+    | id_ator | id_catalogo |
+    |---------|-------------|
+    | 1       | 1           |
+    | 2       | 1           |
+    | ...     | ...         |
 
-| id_cartao | numero         | dt_vencimento | cod_seguranca | titulo |
-|-----------|----------------|---------------|---------------|--------|
-| 1         | 1111222233334444 | 2025-01-01    | 123           | Mastercard |
-| 2         | 5555666677778888 | 2024-03-01    | 456           | Visa       |
-| ...       | ...            | ...           | ...           | ...    |
+- Tabela `categoria_catalogo`:
 
-#
-Tabela `tipo_pagamento`
+    | id_categoria | id_catalogo |
+    |--------------|-------------|
+    | 1            | 1           |
+    | 2            | 1           |
+    | ...          | ...         |
 
-| id_tipo_pagamento | nome          |
-|-------------------|---------------|
-| 1                 | Cartão de Crédito |
-| 2                 | Transferência Bancária |
-| ...               | ...           |
-#
+- Tabela `filme`:
 
-Tabela `cliente`
+    | id_filme | osca | id_catalogo |
+    |----------|------|-------------|
+    | 1        | null | 1           |
+    | 2        | null | 2           |
+    | ...
 
-| id_cliente | nickname | dt_vencimento | id_plano | id_pessoa |
-|------------|----------|---------------|----------|-----------|
-| 1          | user1    | 2023-01-01    | 1        | 1         |
-| 2          | user2    | 2024-02-01    | 2        | 2         |
-| ...        | ...      | ...           | ...      | ...       |
-#
-Tabela `pagamento`
 
-| id_pagamento | valor | dt_pagamento | forma_pagamento | id_cliente | id_cartao | id_tipo_pagamento |
-|--------------|-------|--------------|-----------------|------------|-----------|------------------|
-| 1            | 9.99  | 2022-01-01   | Cartão de Crédito | 1          | 1         | 1                |
-| 2            | 14.99 | 2023-02-01   | Cartão de Crédito | 2          | 2         | 1                |
-| ...          | ...   | ...          | ...             | ...        | ...| ...              |
+- Tabela `serie`:
 
-#
-Tabela `perfil`
+    | id_serie | id_catalogo |
+    |----------|-------------|
+    | 1        | 2           |
+    | 2        | 3           |
+    | ...      | ...         |
 
-| id_perfil | foto | nome | tipo            | id_cliente |
-|-----------|------|------|-----------------|------------|
-| 1         | ...  | John | perfil adulto   | 1          |
-| 2         | ...  | Jane | perfil infantil | 2          |
-| ...       | ...  | ...  | ...             | ...        |
+- Tabela `temporada`:
 
-#
+    | id_temporada | titulo | descricao | id_serie |
+    |--------------|--------|-----------|----------|
+    | 1            | Temporada 1 | ... | 1        |
+    | 2            | Temporada 2 | ... | 1        |
+    | ...          | ...    | ...       | ...      |
+
+- Tabela `episodio`:
+
+    | id_episodio | nome | duracao | id_temporada | id_serie |
+    |-------------|------|---------|--------------|----------|
+    | 1           | Episódio 1 | 00:30 | 1            | 1        |
+    | 2           | Episódio 2 | 00:30 | 1            | 1        |
+    | ...         | ...  | ...     | ...          | ...      |
+
+- Tabela `endereco`:
+
+    | id_endereco | numero | endereco | cep      | cidade  | id_pais |
+    |-------------|--------|----------|----------|---------|---------|
+    | 1           | 123    | Rua A    | 12345678 | CidadeA | 1       |
+    | 2           | 456    | Rua B    | 87654321 | CidadeB | 2       |
+    | ...         | ...    | ...      | ...      | ...     | ...     |
+
+- Tabela `pessoa`:
+
+    | id_pessoa | nome  | sobrenome | senha | email                 | status | avaliacao | dt_nascimento | dt_cadastro | id_endereco |
+    |-----------|-------|-----------|-------|-----------------------|--------|-----------|---------------|-------------|-------------|
+    | 1         | João  | Silva     | ...   | joao.silva@example.com | ...    | 4         | 1980-01-01    | ...         | 1           |
+    | 2         | Maria | Santos    | ...   | maria.santos@example.com | ...  | 3         | 1995-05-10    | ...         | 2           |
+    | ...       | ...   | ...       | ...   | ...                   | ...    | ...       | ...           | ...         | ...         |
+
+- Tabela `funcionario`:
+
+    | id_funcionario | foto | id_pessoa |
+    |----------------|------|-----------|
+    | 1              | ...  | 1         |
+    | 2              | ...  | 2         |
+    | ...            | ...  | ...       |
+
+- Tabela `plano`:
+
+    | id_plano | valor | descricao |
+    |----------|-------|-----------|
+    | 1        | 9.99  | Bronze    |
+    | 2        | 14.99 | Prata     |
+    | ...      | ...   | ...       |
+
+- Tabela `cartao_credito`:
+
+    | id_cartao | numero         | dt_vencimento | cod_seguranca | titulo |
+    |-----------|----------------|---------------|---------------|--------|
+    | 1         | 1111222233334444 | 2025-01-01    | 123           | Mastercard |
+    | 2         | 5555666677778888 | 2024-03-01    | 456           | Visa       |
+    | ...       | ...            | ...           | ...           | ...    |
+
+
+- Tabela `tipo_pagamento`:
+
+    | id_tipo_pagamento | nome          |
+    |-------------------|---------------|
+    | 1                 | Cartão de Crédito |
+    | 2                 | Transferência Bancária |
+    | ...               | ...           |
+
+- Tabela `cliente`:
+
+    | id_cliente | nickname | dt_vencimento | id_plano | id_pessoa |
+    |------------|----------|---------------|----------|-----------|
+    | 1          | user1    | 2023-01-01    | 1        | 1         |
+    | 2          | user2    | 2024-02-01    | 2        | 2         |
+    | ...        | ...      | ...           | ...      | ...       |
+
+- Tabela `pagamento`:
+
+    | id_pagamento | valor | dt_pagamento | forma_pagamento | id_cliente | id_cartao | id_tipo_pagamento |
+    |--------------|-------|--------------|-----------------|------------|-----------|------------------|
+    | 1            | 9.99  | 2022-01-01   | Cartão de Crédito | 1          | 1         | 1                |
+    | 2            | 14.99 | 2023-02-01   | Cartão de Crédito | 2          | 2         | 1                |
+    | ...          | ...   | ...          | ...             | ...        | ...       | ...              |
+
+
+- Tabela `perfil`:
+
+    | id_perfil | foto | nome | tipo            | id_cliente |
+    |-----------|------|------|-----------------|------------|
+    | 1         | ...  | John | perfil adulto   | 1          |
+    | 2         | ...  | Jane | perfil infantil | 2          |
+    | ...       | ...  | ...  | ...             | ...        |
+
+
 
 
 <div align=center>
 
 ## Views
 </div>
-<div align=left>
 
-- **vw_usuario:** Apresenta informações sobre os usuários do sistema, incluindo funcionários e clientes. Inclui dados como nome, tipo de usuário, data de nascimento, endereço e detalhes do plano.
+- **vw_usuario:** 
+ Apresenta informações sobre os usuários do sistema, incluindo funcionários e clientes. Inclui dados como nome, tipo de usuário, data de nascimento, endereço e detalhes do plano.
 
 - **vw_catalogo:** Exibe detalhes sobre os itens do catálogo, identificando se são filmes ou séries. Inclui informações como título, sinopse, ano de lançamento, duração e idiomas disponíveis.
 
@@ -240,12 +235,17 @@ Tabela `perfil`
 - **vw_perfil:** Apresenta informações sobre os perfis dos clientes, incluindo o número total de perfis e os tipos de perfil associados a cada cliente.
 
 
+
+
+
+
+
+
+
 <div align=center>
 
 ## Funções
 </div>
-
-
 
 - **Function1:** Esta função daz isso e quilo outro ...
 - **Function2:** Esta função daz isso e quilo outro ...
