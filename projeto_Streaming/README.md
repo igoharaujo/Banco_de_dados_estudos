@@ -7,13 +7,13 @@ Esse é um projeto de banco de dados visando criar uma estrutura de dados para a
 
 
 ## Modelo Conceitual
-![Modelo conceitual](./img/conceitual.png)
+![Modelo conceitual](./4_img/conceitual.png)
 </div>
 
 <div align=center>
 
 ## Modelo Logico
-![Modelo conceitual](./img/fisico.png)
+![Modelo conceitual](./4_img/fisico.png)
 </div>
 
 <div align=center>
