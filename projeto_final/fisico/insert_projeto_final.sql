@@ -341,23 +341,22 @@ VALUES
     
     
 -- --------------------------------------------------------
-     
 
 INSERT INTO catalogo 
 	(titulo, sinopse, ano_lancamento, duracao, avaliacao, idioma_original, id_classificacao) 
 VALUES
 -- Inserindo Filmes
     ('Vingadores: Ultimato', 'Os heróis da Marvel se unem para derrotar Thanos.', 2019, '03:01:00', '5', 1, 3),
-    ('A Origem', 'Um ladrão especializado em roubar segredos corporativos invade os sonhos das pessoas.', 2010, '02:28:00', '4', 2, 4),
+    ('A Origem', 'Um ladrão especializado em roubar segredos corporativos invade os sonhos das pessoas.', 2010, '02:28:00', '4', 1, 4),
     ('Pulp Fiction: Tempo de Violência', 'Uma história não linear que entrelaça várias tramas.', 1994, '02:34:00', '5', 1, 4),
-    ('O Senhor dos Anéis: O Retorno do Rei', 'A batalha final pela Terra-média está prestes a acontecer.', 2003, '03:21:00', '5', 3, 5),
-    ('Interestelar', 'Um grupo de exploradores parte em uma missão espacial para salvar a humanidade.', 2014, '02:49:00', '4', 2, 3),
+    ('O Senhor dos Anéis: O Retorno do Rei', 'A batalha final pela Terra-média está prestes a acontecer.', 2003, '03:21:00', '5', 1, 5),
+    ('Interestelar', 'Um grupo de exploradores parte em uma missão espacial para salvar a humanidade.', 2014, '02:49:00', '4', 1, 3),
 
 -- Inserindo Séries
     ('Breaking Bad', 'Um professor de química se envolve com o tráfico de drogas.', 2008, '04:39:00', '5', 1, 4),
-    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '04:40:00', '4', 2, 2),
+    ('Friends', 'Um grupo de amigos vive diversas aventuras em Nova York.', 1994, '04:40:00', '4', 1, 2),
     ('Game of Thrones', 'As famílias nobres lutam pelo controle do Trono de Ferro.', 2011, '04:50:00', '5', 1, 5),
-    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '05:32:00', '4', 3, 3),
+    ('Stranger Things', 'Um grupo de crianças enfrenta criaturas sobrenaturais em sua cidade.', 2016, '05:32:00', '4', 1, 3),
     ('The Crown', 'A vida da rainha Elizabeth II desde o início de seu reinado.', 2016, '03:27:00', '5', 2, 4);
     
 -- ---------------------------------------------------------------------------
@@ -728,7 +727,7 @@ VALUES
 -- ---------------------------------------------------------
 
 INSERT INTO cartao_credito 
-	(numero, dt_vencimento, cod_seguranca, titulo)
+	(numero, dt_vencimento, cod_seguranca, titular)
 VALUES
     ('1111222233334444', '2023-06-30', 123, 'João Silva'),          -- Pessoa 1
     ('2222333344445555', '2023-07-31', 456, 'Maria Souza'),         -- Pessoa 2

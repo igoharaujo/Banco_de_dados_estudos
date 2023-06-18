@@ -1,7 +1,3 @@
-/* Para as views deseja-se as seguintes visualizações:
-
-vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
-vw_perfil - deve conter todos os dados do perfil e seu cliente.*/
 
 -- vw_usuario -----------------------------------------
 CREATE VIEW vw_usuario AS
@@ -12,15 +8,15 @@ SELECT
     p.nome,
     p.sobrenome,
     p.email,
-    p.dt_nascimento,
-    p.dt_cadastro,
+    date_format(p.dt_nascimento, '%d-%m-%Y') as data_nascimento,
+	date_format(p.dt_cadastro, '%d-%m-%Y') as data_cadastro,
     e.numero AS numero_endereco,
     e.endereco,
     e.cep,
     e.cidade,
     pais.nome AS pais_origem,
     COUNT(pf.id_perfil) AS quantidade_perfis, --  contar os registros de perfis correspondentes ao ID do perfil.
-    pl.valor AS valor_plano,
+    CONCAT('R$ ',pl.valor) AS valor_plano,
     pl.descricao AS descricao_plano
 FROM pessoa p
 LEFT JOIN funcionario f ON f.id_pessoa = p.id_pessoa
@@ -32,20 +28,28 @@ LEFT JOIN plano pl ON pl.id_plano = c.id_plano
 GROUP BY p.id_pessoa, tipo_usuario, numero_endereco, endereco, cep, cidade, pais_origem, valor_plano, descricao_plano;
 
  select * from vw_usuario;
-
+drop view vw_usuario;
  
  -- vw_catalogo -------------------------------------------
  CREATE VIEW vw_catalogo AS
- SELECT c.id_catalogo
- ,if (f.id_filme IS NOT NULL, 'filme', 'serie') AS identificação
- , c.titulo
- , c.sinopse
- , c.ano_lancamento
- , c.duracao
- , c.avaliacao
- FROM catalogo c 
- left join filme f ON c.id_catalogo = f.id_catalogo
- left join serie s ON s.id_catalogo = f.id_catalogo;
+ SELECT c.id_catalogo,
+    IF(f.id_filme IS NOT NULL, 'filme', 'serie') AS identificacao,
+    c.titulo,
+    c.sinopse,
+    c.ano_lancamento,
+    c.duracao,
+    c.avaliacao,
+    i.nome AS idioma_original,
+    (
+        SELECT GROUP_CONCAT(i2.nome SEPARATOR ', ')
+        FROM idioma_catalogo ic
+        JOIN idioma i2 ON ic.id_idioma = i2.id_idioma
+        WHERE ic.id_catalogo = c.id_catalogo
+    ) AS outros_idiomas
+FROM catalogo c
+LEFT JOIN filme f ON c.id_catalogo = f.id_catalogo
+LEFT JOIN serie s ON c.id_catalogo = s.id_catalogo
+LEFT JOIN idioma i ON c.idioma_original = i.id_idioma;
  
  select * from vw_catalogo;
  
@@ -96,8 +100,75 @@ GROUP BY a.nome;
 
 SELECT * FROM vw_ator;
 
--- vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
 
-select * from pagamento;
+-- vw_pagamento ------------------------------------------
+CREATE VIEW vw_pagamento AS
+select 
+p.nome
+,p.status
+,pl.descricao as plano
+,CONCAT('R$ ', pa.valor) as valor
+,tp.nome tipo_pagamento
+,date_format(dt_pagamento, '%d-%m-%Y') as data_pagamento
+from pessoa p INNER JOIN cliente c ON p.id_pessoa = c.id_pessoa
+INNER JOIN plano pl ON pl.id_plano = c.id_plano LEFT JOIN pagamento pa ON pa.id_cliente = c.id_cliente
+INNER JOIN tipo_pagamento tp ON tp.id_tipo_pagamento = pa.id_tipo_pagamento;
+SELECT * FROM pagamento;
+ 
+drop view vw_pagamento;
+select * from vw_pagamento;
+ -- vw_perfil -------------------------------------------------
+CREATE VIEW vw_perfil AS
+SELECT 'cliente' AS tipo,
+       p.nome,
+       COUNT(pe.id_cliente) AS total_perfil,
+	   GROUP_CONCAT(pe.tipo SEPARATOR ', ') as tipo_perfil
+FROM pessoa p
+INNER JOIN cliente c ON c.id_pessoa = p.id_pessoa
+LEFT JOIN perfil pe ON pe.id_cliente = c.id_cliente
+GROUP BY p.nome;
+
+SELECT * FROM vw_perfil;
+ 
+
+
+
+
+ /*
+ SELECT c.titulo, COUNT(t.id_serie) AS temporada
+FROM catalogo c
+INNER JOIN serie s ON s.id_catalogo = c.id_catalogo
+LEFT JOIN temporada t ON t.id_serie = s.id_serie
+GROUP BY c.titulo;
+
+ 
+select * from serie;
+ 
+SELECT s.id_serie, c.titulo, SEC_TO_TIME(SUM(TIME_TO_SEC(e.duracao))) AS duracao_total
+FROM catalogo c
+INNER JOIN serie s ON c.id_catalogo = s.id_catalogo
+LEFT JOIN temporada t ON s.id_serie = t.id_serie
+LEFT JOIN episodio e ON t.id_temporada = e.id_temporada
+GROUP BY s.id_serie, c.titulo;
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

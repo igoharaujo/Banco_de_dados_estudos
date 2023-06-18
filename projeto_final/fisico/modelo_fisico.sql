@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS cartao_credito(
     numero VARCHAR(16) NOT NULL,
     dt_vencimento DATE NOT NULL,
     cod_seguranca INT NOT NULL,
-    titulo VARCHAR(45) NOT NULL
+    titular VARCHAR(100) NOT NULL
 )auto_increment = 1;
 
 CREATE TABLE IF NOT EXISTS tipo_pagamento(
@@ -176,6 +176,7 @@ CONSTRAINT fk_cliente_plano FOREIGN KEY (id_plano) REFERENCES plano(id_plano)
 CREATE TABLE IF NOT EXISTS pagamento(
 	id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
     valor FLOAT NOT NULL,
+	dt_pagamento DATE DEFAULT (curdate()),
     forma_pagamento VARCHAR(20) NOT NULL,
     id_cliente INT,
     id_cartao INT,
@@ -196,4 +197,4 @@ CONSTRAINT fk_id_cliente_perfil FOREIGN KEY (id_cliente) REFERENCES cliente(id_c
 
 
 
- -- drop database streamer;
+-- drop database streamer;

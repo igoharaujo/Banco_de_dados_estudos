@@ -1,7 +1,3 @@
-/* Para as views deseja-se as seguintes visualizações:
-
-vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
-vw_perfil - deve conter todos os dados do perfil e seu cliente.*/
 
 -- vw_usuario -----------------------------------------
 CREATE VIEW vw_usuario AS
@@ -12,15 +8,15 @@ SELECT
     p.nome,
     p.sobrenome,
     p.email,
-    p.dt_nascimento,
-    p.dt_cadastro,
+    date_format(p.dt_nascimento, '%d-%m-%Y') as data_nascimento,
+	date_format(p.dt_cadastro, '%d-%m-%Y') as data_cadastro,
     e.numero AS numero_endereco,
     e.endereco,
     e.cep,
     e.cidade,
     pais.nome AS pais_origem,
     COUNT(pf.id_perfil) AS quantidade_perfis, --  contar os registros de perfis correspondentes ao ID do perfil.
-    pl.valor AS valor_plano,
+    CONCAT('R$ ',pl.valor) AS valor_plano,
     pl.descricao AS descricao_plano
 FROM pessoa p
 LEFT JOIN funcionario f ON f.id_pessoa = p.id_pessoa
@@ -32,7 +28,7 @@ LEFT JOIN plano pl ON pl.id_plano = c.id_plano
 GROUP BY p.id_pessoa, tipo_usuario, numero_endereco, endereco, cep, cidade, pais_origem, valor_plano, descricao_plano;
 
  select * from vw_usuario;
-
+drop view vw_usuario;
  
  -- vw_catalogo -------------------------------------------
  CREATE VIEW vw_catalogo AS
@@ -105,45 +101,39 @@ GROUP BY a.nome;
 SELECT * FROM vw_ator;
 
 
-
-
--- vw_pagamento - Deve conter todos os dados de pagamento, seu tipo, o nome do cliente, seu plano e data de vencimento.
+-- vw_pagamento ------------------------------------------
 CREATE VIEW vw_pagamento AS
 select 
 p.nome
 ,p.status
 ,pl.descricao as plano
-,pa.valor
+,CONCAT('R$ ', pa.valor) as valor
 ,tp.nome tipo_pagamento
+,date_format(dt_pagamento, '%d-%m-%Y') as data_pagamento
 from pessoa p INNER JOIN cliente c ON p.id_pessoa = c.id_pessoa
 INNER JOIN plano pl ON pl.id_plano = c.id_plano LEFT JOIN pagamento pa ON pa.id_cliente = c.id_cliente
 INNER JOIN tipo_pagamento tp ON tp.id_tipo_pagamento = pa.id_tipo_pagamento;
 SELECT * FROM pagamento;
  
- select * from pagamento;
- 
+drop view vw_pagamento;
+select * from vw_pagamento;
  -- vw_perfil -------------------------------------------------
 CREATE VIEW vw_perfil AS
-SELECT pe.id_perfil
-       ,p.nome as cliente
-       ,COUNT(pe.id_cliente) AS total_perfil
-       ,(SELECT GROUP_CONCAT(p.tipo SEPARATOR ', ')
-        FROM perfil p JOIN cliente c 
-        ON p.id_cliente = c.id_cliente
-        WHERE c.id_pessoa = p.id_pessoa) as tipo_perfil
+SELECT 'cliente' AS tipo,
+       p.nome,
+       COUNT(pe.id_cliente) AS total_perfil,
+	   GROUP_CONCAT(pe.tipo SEPARATOR ', ') as tipo_perfil
 FROM pessoa p
-LEFT JOIN cliente c ON c.id_pessoa = p.id_pessoa
+INNER JOIN cliente c ON c.id_pessoa = p.id_pessoa
 LEFT JOIN perfil pe ON pe.id_cliente = c.id_cliente
-WHERE c.id_cliente IS NOT NULL
 GROUP BY p.nome;
 
 SELECT * FROM vw_perfil;
  
 
- 
- 
 
- 
+
+
  /*
  SELECT c.titulo, COUNT(t.id_serie) AS temporada
 FROM catalogo c
