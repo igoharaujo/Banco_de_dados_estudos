@@ -1,7 +1,7 @@
 
 <div align=center>
 
-# Projeto Streaming
+# Projeto Streamear
 
 Esse é um projeto de banco de dados visando criar uma estrutura de dados para armazenar informações de serviço de conteúdos multimídia e demonstrar o conteúdo aprendido no curso de **DBA**. O projeto foi desenvolvido utilizando o sistema de gerenciamento MySQL para garantir a eficácia e confiabilidade na gestão dos dados.
 
