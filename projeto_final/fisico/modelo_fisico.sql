@@ -198,3 +198,4 @@ CONSTRAINT fk_id_cliente_perfil FOREIGN KEY (id_cliente) REFERENCES cliente(id_c
 
 
 -- drop database streamer;
+-- oi igor
