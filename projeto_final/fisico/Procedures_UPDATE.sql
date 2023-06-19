@@ -8,7 +8,8 @@ CREATE PROCEDURE sp_update_pais(
 BEGIN
 	DECLARE verifica INT;
     SELECT count(*) INTO verifica FROM pais where id_pais = p_id_pais;
-	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] FK não encontrada';
+    
+	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY KEY] ID não encontrad';
 	ELSEIF nome_pais IS NULL OR cod_pais IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
     ELSEIF nome_pais = '' OR cod_pais = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSEIF nome_pais NOT LIKE '%___%' OR cod_pais NOT LIKE '%__%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] quantidade de caracteres curta';
@@ -22,12 +23,12 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-
+call sp_update_pais(3, 'arroz', '+4787');
 
 
 -- CLASSIFICAÇÃO
 DELIMITER $$
-CREATE PROCEDURE sp_insert_classificacao(
+CREATE PROCEDURE sp_update_classificacao(
 	cla_id INT
 	,cla_idade VARCHAR(20)
 	,cla_descricao VARCHAR(100)
@@ -37,7 +38,7 @@ CREATE PROCEDURE sp_insert_classificacao(
     DECLARE verifica INT;
     SELECT count(*) INTO verifica FROM classificacao where id_classificacao = cla_id;
     
-	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] FK não encontrada';
+	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY  KEY] id não encontrado';
 	ELSEIF cla_idade IS NULL OR cla_descricao IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
 	ELSEIF cla_idade = '' OR cla_descricao = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
 	ELSEIF cla_descricao NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] menos de 3 caracteres';
@@ -45,12 +46,11 @@ CREATE PROCEDURE sp_insert_classificacao(
 		UPDATE classificacao
 			SET idade = LOWER(cla_idade), descricao = LOWER(cla_descricao)
 		WHERE id_classificacao = cla_id;
-        
 	END IF;
-    
-    END $$
-    DELIMITER ;
+END $$
+DELIMITER ;
 
+CALL sp_update_classificacao(1, '21', 'para lindos');
 
 
 -- ATOR
@@ -65,7 +65,7 @@ CREATE PROCEDURE sp_update_ator(
 BEGIN
 	DECLARE verifica INT;
 	SELECT COUNT(*) INTO verifica FROM ator WHERE id_ator = at_id_ator;
-	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
+	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY KEY] ID não encontrado';
 	ELSEIF at_nome IS NULL OR at_sobrenome IS NULL OR at_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
 	ELSEIF at_nome = '' OR at_sobrenome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
 	ELSEIF at_nome NOT LIKE '%___%' OR at_sobrenome NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
@@ -83,7 +83,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-
+call sp_update_ator(300,'igor', 'lindão', '2020-05-05', null);
 
 -- IDIOMA
 DELIMITER $$
@@ -91,7 +91,7 @@ CREATE PROCEDURE sp_update_idioma(i_id_idioma INT, i_nome VARCHAR(45))
 BEGIN
 	DECLARE verifica INT;
 	SELECT COUNT(*) INTO verifica FROM idioma WHERE id_idioma = i_id_idioma;
-	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
+	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] ID não encontrado';
 	ELSEIF i_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
 	ELSEIF i_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
 	ELSEIF i_nome NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
@@ -103,6 +103,8 @@ BEGIN
 END $$
 DELIMITER ;
 
+call sp_update_idioma(5, 'i');
+select * from idioma;
 
 
 -- CATEGORIA
@@ -111,10 +113,10 @@ CREATE PROCEDURE sp_update_categoria(c_id_categoria INT, c_nome VARCHAR(45))
 BEGIN
 	DECLARE verifica INT;
 	SELECT COUNT(*) INTO verifica FROM categoria WHERE id_categoria = c_id_categoria;
-	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
+	IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY KEY] ID não encontrado';
 	ELSEIF c_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
 	ELSEIF c_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
-	ELSEIF c_nome NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
+	ELSEIF c_nome NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO]nome com menos de 3 caracteres';
 	ELSE
 		UPDATE categoria
 		SET nome = LOWER(c_nome)
@@ -122,10 +124,10 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
+call sp_update_categoria(1, 'm');
 
 
-
--- CATALOGO
+# CATALOGO
 DELIMITER $$
 CREATE PROCEDURE sp_update_catalogo(
     c_id_catalogo INT,
