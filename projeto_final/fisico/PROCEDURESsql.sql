@@ -201,7 +201,7 @@ CREATE PROCEDURE sp_insert_idioma_catalogo(
     DECLARE id_test1 INT;
     DECLARE id_test2 INT;
     SELECT count(*) INTO id_test1 FROM idioma where id_idioma = pc_fk_idioma;
-    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalog = pc_fk_catalogo;
+    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalogo = pc_fk_catalogo;
     
     IF id_test1 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_idioma´ não encontrado';
     ELSEIF id_test2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATALOGO´ não encontrado';
@@ -219,7 +219,7 @@ CREATE PROCEDURE sp_insert_idioma_catalogo(
     
 -- ATOR_CATALOGO
 DELIMITER $$
-CREATE PROCEDURE sp_ator_catalogo(
+CREATE PROCEDURE sp_insert_ator_catalogo(
 	pc_fk_ator INT
     ,pc_fk_catalogo INT
     )
@@ -228,7 +228,7 @@ CREATE PROCEDURE sp_ator_catalogo(
     DECLARE id_test1 INT;
     DECLARE id_test2 INT;
     SELECT count(*) INTO id_test1 FROM ator where id_ator = pc_fk_ator;
-    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalog = pc_fk_catalogo;
+    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalogo = pc_fk_catalogo;
     
     IF id_test1 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_ATOR´ não encontrado';
     ELSEIF id_test2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATALOGO´ não encontrado';
@@ -246,7 +246,7 @@ CREATE PROCEDURE sp_ator_catalogo(
 
 -- CATEGORIA_CATALOGO
 DELIMITER $$
-CREATE PROCEDURE sp_categoria_catalogo(
+CREATE PROCEDURE sp_insert_categoria_catalogo(
 	pc_fk_categoria INT
     ,pc_fk_catalogo INT
     )
@@ -270,31 +270,114 @@ CREATE PROCEDURE sp_categoria_catalogo(
     END $$
     DELIMITER ;
    
-    -- CATEGORIA_CATALOGO
+
+    
+    
+    -- FILME
 DELIMITER $$
-CREATE PROCEDURE sp_categoria_catalogo(
-	pc_fk_categoria INT
-    ,pc_fk_catalogo INT
+CREATE PROCEDURE sp_insert_filme(
+	f_osca INT
+    ,f_fk_catalogo INT
     )
 	BEGIN
     
     DECLARE id_test1 INT;
-    DECLARE id_test2 INT;
-    SELECT count(*) INTO id_test1 FROM categoria where id_categoria = pc_fk_categoria;
-    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalog = pc_fk_catalogo;
-    
-    IF id_test1 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATEGORIA_´ não encontrado';
-    ELSEIF id_test2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATALOGO´ não encontrado';
+    SELECT count(*) INTO id_test1 FROM catalogo where id_catalogo = f_fk_catalogo;
+
+    IF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_catalogo´ não encontrado';
     ELSE
     
-		INSERT INTO categoria_catalogo
-			(id_categoria, id_catalogo)
+		INSERT INTO filme
+			(osca, id_catalogo)
 		VALUES
-			(pc_fk_categoria, pc_fk_catalogo);
+			(f_osca, f_fk_catalogo);
 	END IF;
     
     END $$
     DELIMITER ;
 
+    
+ -- SERIE
+DELIMITER $$
+CREATE PROCEDURE sp_insert_serie(
+    s_fk_catalogo INT
+    )
+	BEGIN
+    
+    DECLARE verifica INT;
+    SELECT count(*) INTO verifica FROM catalogo where id_catalogo = s_fk_catalogo;
+
+    IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_catalogo´ não encontrado';
+    ELSE
+    
+		INSERT INTO filme
+			(id_catalogo)
+		VALUES
+			(s_fk_catalogo);
+	END IF;
+    
+    END $$
+    DELIMITER ;
+    
+    
+-- TEMPORADA
+DELIMITER $$
+CREATE PROCEDURE sp_insert_temporada(
+	t_titulo VARCHAR(45)
+    ,t_descricao VARCHAR(100)
+    ,t_fk_serie INT
+    )
+	BEGIN
+    
+    DECLARE verifica INT;
+    SELECT count(*) INTO verifica FROM serie where id_serie = t_fk_serie;
+
+    IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_serie´ não encontrado';
+    ELSE
+    
+		INSERT INTO temporada
+			(titulo, descricao, id_serie)
+		VALUES
+			(t_titulo, t_descricao, t_fk_serie);
+	END IF;
+    
+    END $$
+    DELIMITER ;
+    
+    
+-- EPISODIO
+DELIMITER $$
+CREATE PROCEDURE sp_insert_episodio(
+	e_nome VARCHAR(100)
+    ,e_duracao TIME
+    ,e_fk_temporada INT
+    ,e_fk_serie INT
+    )
+	BEGIN
+    
+    DECLARE verifica1 INT;
+    DECLARE verifica2 INT;
+    SELECT count(*) INTO verifica1 FROM temporada where id_temporada = e_fk_temporada;
+    SELECT count(*) INTO verifica2 FROM serie where id_serie = e_fk_serie;
+
+    IF verifica1 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_temporada´ não encontrado';
+	ELSEIF verifica2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_serie´ não encontrado';
+    ELSEIF e_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
+	ELSEIF e_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+	ELSEIF e_nome NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] menos de 3 caracteres';
+    ELSEIF e_duracao <= '00:00:00' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] time invalido';
+    ELSE
+    
+		INSERT INTO episodio
+			(nome, duracao, id_temporada, id_serie)
+		VALUES
+			(e_nome, e_duracao, e_fk_temporada, e_fk_serie);
+	END IF;
+    
+    END $$
+    DELIMITER ;
+    
+    
+    
     
 
