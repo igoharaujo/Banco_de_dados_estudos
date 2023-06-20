@@ -410,7 +410,7 @@ drop procedure sp_insert_endereco;
     
 call sp_insert_endereco(22,'rua do ceu', '645664','caoufhja', 5);
 
-#PESSOA
+-- PESSOA
 DELIMITER $$
 CREATE PROCEDURE sp_insert_pessoa(
 	  p_nome VARCHAR(32)
@@ -427,19 +427,118 @@ BEGIN
     SELECT COUNT(*) INTO id_test FROM endereco WHERE id_endereco = p_id_endereco;
     
     IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF p_dt_nascimento = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF p_dt_nascimento >= curdate() THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] data invalida';
     ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSEIF LENGTH(p_senha) < 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
     ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
     ELSE
         INSERT INTO pessoa 
 			(nome, sobrenome, senha, email, status, avaliacao, dt_nascimento, dt_cadastro, id_endereco)
-        VALUES (p_nome, p_sobrenome, p_senha, p_email, p_status, p_avaliacao, p_dt_nascimento, CURDATE(), p_id_endereco);
+        VALUES (LOWER(p_nome), LOWER(p_sobrenome), p_senha, LOWER(p_email), p_status, p_avaliacao, p_dt_nascimento, CURDATE(), p_id_endereco);
     END IF;
 END $$
 DELIMITER ;
 
-CALL sp_insert_pessoa('IGORLINDÃO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2024-14-12', 3);
+CALL sp_insert_pessoa('IGORLINDO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2020-10-12', 3);
+    drop procedure sp_insert_pessoa;
     
+# FUNCIONARIO
+DELIMITER $$
+CREATE PROCEDURE sp_insert_funcionario(
+	  f_foto TINYBLOB
+	, f_id_pessoa INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM pessoa WHERE id_pessoa = f_id_pessoa;
     
+    IF f_id_pessoa IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF id_test = FALSE THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
+    ELSE
+        INSERT INTO funcionario (foto, id_pessoa)
+        VALUES (f_foto, f_id_pessoa);
+    END IF;
+END $$
+DELIMITER ;
+
+
+# PAGAMENTO
+DELIMITER $$
+CREATE PROCEDURE sp_insert_plano(
+	  p_valor FLOAT
+	, p_descricao VARCHAR(100)
+)
+BEGIN
+    IF p_valor IS NULL OR p_descricao IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_descricao = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSE
+        INSERT INTO plano (valor, descricao)
+        VALUES (p_valor, p_descricao);
+    END IF;
+END $$
+DELIMITER ;
+
+# CARTÃO DE CREDITO
+DELIMITER $$
+CREATE PROCEDURE sp_insert_cartao_credito(
+	  c_numero VARCHAR(16)
+	, c_dt_vencimento DATE
+	, c_cod_seguranca INT
+	, c_titular VARCHAR(100)
+)
+BEGIN
+    IF c_numero IS NULL OR c_dt_vencimento IS NULL OR c_cod_seguranca IS NULL OR c_titular IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF c_numero = '' OR c_titular = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSE
+        INSERT INTO cartao_credito (numero, dt_vencimento, cod_seguranca, titular)
+        VALUES (c_numero, c_dt_vencimento, c_cod_seguranca, c_titular);
+    END IF;
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE sp_update_cartao_credito(
+	  c_id_cartao INT
+	, c_numero VARCHAR(16)
+	, c_dt_vencimento DATE
+	, c_cod_seguranca INT
+	, c_titular VARCHAR(100)
+)
+BEGIN
+    IF c_numero IS NULL OR c_dt_vencimento IS NULL OR c_cod_seguranca IS NULL OR c_titular IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF c_numero = '' OR c_titular = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSE
+        UPDATE cartao_credito
+        SET
+            numero = c_numero,
+            dt_vencimento = c_dt_vencimento,
+            cod_seguranca = c_cod_seguranca,
+            titular = c_titular
+        WHERE
+            id_cartao = c_id_cartao;
+    END IF;
+END $$
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
 

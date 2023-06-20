@@ -329,7 +329,7 @@ drop procedure sp_update_endereco;
 
 call sp_update_endereco(1, 22,'rua do ceu', '64545664','calorada', 5);
 
-#PESSOA
+-- PESSOA
 DELIMITER $$
 CREATE PROCEDURE sp_update_pessoa(
 	  p_id_pessoa INT
@@ -344,16 +344,13 @@ CREATE PROCEDURE sp_update_pessoa(
 )
 BEGIN
     DECLARE id_test INT;
-    SELECT COUNT(*) INTO id_test FROM endereco WHERE id_endereco = p_id_endereco;
+    SELECT COUNT(*) INTO id_test FROM pessoa WHERE id_pessoa = p_id_pessoa;
     
-    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
-    ELSEIF LENGTH(p_senha) < 8 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
-    ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
+    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_dt_nascimento >= curdate() THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] data invalida';
+    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF LENGTH(p_senha) < 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
+    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
     ELSE
         UPDATE pessoa
         SET
@@ -370,6 +367,71 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+
+CALL sp_update_pessoa(100, 'IGORLINDO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2020-10-12', 3);
+
+# FUNCIONARIO
+DELIMITER $$
+CREATE PROCEDURE sp_update_funcionario(
+	  f_id_funcionario INT
+	, f_foto TINYBLOB
+	, f_id_pessoa INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM pessoa WHERE id_pessoa = f_id_pessoa;
+    
+    IF f_id_pessoa IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF id_test = FALSE THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
+    ELSE
+        UPDATE funcionario
+        SET
+            foto = f_foto,
+            id_pessoa = f_id_pessoa
+        WHERE
+            id_funcionario = f_id_funcionario;
+    END IF;
+END $$
+DELIMITER ;
+
+
+# PAGAMENTO
+DELIMITER $$
+CREATE PROCEDURE sp_update_plano(
+	  p_id_plano INT
+	, p_valor FLOAT
+	, p_descricao VARCHAR(100)
+)
+BEGIN
+    IF p_valor IS NULL OR p_descricao IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_descricao = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSE
+        UPDATE plano
+        SET
+            valor = p_valor,
+            descricao = p_descricao
+        WHERE
+            id_plano = p_id_plano;
+    END IF;
+END $$
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
