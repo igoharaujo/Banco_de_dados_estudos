@@ -285,7 +285,7 @@ Esse é um projeto de banco de dados visando criar uma estrutura de dados para a
 |-----------|-----------|
 |DDL        |[Clique aqui]()|
 |Dados      |[Clique aqui](https://seulinkaqui.com)|
-|Views      |[Clique aqui](/2_script/3-viws.sql)|
+|Views      |[Clique aqui](/projeto_DBA/2_script/3-viws.sql)|
 |Funções    |[Clique aqui](https://seulinkaqui.com)|
 |Procedures |[Clique aqui](https://seulinkaqui.com)|
 |Triggers   |[Clique aqui](https://seulinkaqui.com)|
