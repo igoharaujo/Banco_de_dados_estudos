@@ -127,7 +127,7 @@ DELIMITER ;
 call sp_update_categoria(1, 'm');
 
 
-# CATALOGO
+-- CATALOGO
 DELIMITER $$
 CREATE PROCEDURE sp_update_catalogo(
     c_id_catalogo INT,
@@ -173,6 +173,8 @@ BEGIN
 END $$
 DELIMITER ;
 
+call sp_update_catalogo(1, 'IGOR', 'MACACADA LOKA', 2023, '01:00:00',5,3,2);
+select * from catalogo;
 
 -- -------------------------------------------------
 
@@ -185,12 +187,12 @@ CREATE PROCEDURE sp_update_filme(
 )
 BEGIN
     DECLARE verifica_filme INT;
+	DECLARE verifica_catalogo INT;
     SELECT COUNT(*) INTO verifica_filme FROM filme WHERE id_filme = f_id_filme;
-    DECLARE verifica_catalogo INT;
     SELECT COUNT(*) INTO verifica_catalogo FROM catalogo WHERE id_catalogo = f_fk_catalogo;
     
     IF verifica_filme = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY KEY] Valor de ID não encontrado';
     ELSEIF verifica_catalogo = 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_catalogo não encontrado';
     ELSE
@@ -201,6 +203,7 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
+call sp_update_filme(1,5,100);
 
 
 -- SERIE
@@ -211,12 +214,12 @@ CREATE PROCEDURE sp_update_serie(
 )
 BEGIN
     DECLARE verifica_serie INT;
+	DECLARE verifica_catalogo INT;
     SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = s_id_serie;
-    DECLARE verifica_catalogo INT;
     SELECT COUNT(*) INTO verifica_catalogo FROM catalogo WHERE id_catalogo = s_fk_catalogo;
     
     IF verifica_serie = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PRIMARY KEY] ID não encontrado';
     ELSEIF verifica_catalogo = 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_catalogo não encontrado';
     ELSE
@@ -227,6 +230,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+CALL sp_update_serie(11,10);
 
 -- TEMPORADA
 DELIMITER $$
@@ -238,20 +242,15 @@ CREATE PROCEDURE sp_update_temporada(
 )
 BEGIN
     DECLARE verifica_temporada INT;
-    SELECT COUNT(*) INTO verifica_temporada FROM temporada WHERE id_temporada = t_id_temporada;
     DECLARE verifica_serie INT;
+    SELECT COUNT(*) INTO verifica_temporada FROM temporada WHERE id_temporada = t_id_temporada;
     SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = t_fk_serie;
     
-    IF verifica_temporada = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de ID não encontrado';
-    ELSEIF verifica_serie = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
-    ELSEIF t_titulo IS NULL OR t_descricao IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
-    ELSEIF t_titulo = '' OR t_descricao = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
-    ELSEIF LENGTH(t_titulo) < 3 OR LENGTH(t_descricao) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Quantidade de caracteres inválida';
+    IF verifica_temporada = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] ID não encontrado';
+    ELSEIF verifica_serie = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
+    ELSEIF t_titulo IS NULL OR t_descricao IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
+    ELSEIF t_titulo = '' OR t_descricao = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
+    ELSEIF LENGTH(t_titulo) < 3 OR LENGTH(t_descricao) < 3 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Quantidade de caracteres inválida';
     ELSE
         UPDATE temporada
         SET titulo = LOWER(t_titulo),
@@ -263,41 +262,11 @@ END $$
 DELIMITER ;
 
 
-
+call sp_update_temporada(101, 'igor do mal', 'o grande poderoso', 2);
 
 -- ------------------------
 
-
--- TEMPORADA
-DELIMITER $$
-CREATE PROCEDURE sp_insert_temporada(
-    t_titulo VARCHAR(45),
-    t_descricao VARCHAR(100),
-    t_fk_serie INT
-)
-BEGIN
-    DECLARE verifica_serie INT;
-    SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = t_fk_serie;
-    
-    IF verifica_serie = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
-    ELSEIF t_titulo IS NULL OR t_descricao IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
-    ELSEIF t_titulo = '' OR t_descricao = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
-    ELSEIF LENGTH(t_titulo) < 3 OR LENGTH(t_descricao) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Quantidade de caracteres inválida';
-    ELSE
-        INSERT INTO temporada
-            (titulo, descricao, id_serie)
-        VALUES
-            (LOWER(t_titulo), LOWER(t_descricao), t_fk_serie);
-    END IF;
-END $$
-DELIMITER ;
-
-
--- EPISODIO
+# EPISODIO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_episodio(
     e_nome VARCHAR(100),
@@ -311,18 +280,12 @@ BEGIN
     SELECT COUNT(*) INTO verifica_temporada FROM temporada WHERE id_temporada = e_fk_temporada;
     SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = e_fk_serie;
     
-    IF verifica_temporada = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_temporada não encontrado';
-    ELSEIF verifica_serie = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
-    ELSEIF e_nome IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
-    ELSEIF e_nome = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
-    ELSEIF LENGTH(e_nome) < 3 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
-    ELSEIF e_duracao <= '00:00:00' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Duração inválida';
+    IF verifica_temporada = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_temporada não encontrado';
+    ELSEIF verifica_serie = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
+    ELSEIF e_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
+    ELSEIF e_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
+    ELSEIF LENGTH(e_nome) < 3 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
+    ELSEIF e_duracao <= '00:00:00' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Duração inválida';
     ELSE
         INSERT INTO episodio
             (nome, duracao, id_temporada, id_serie)

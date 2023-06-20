@@ -283,7 +283,7 @@ Esse é um projeto de banco de dados visando criar uma estrutura de dados para a
 
 |Scripts    |Clique aqui|
 |-----------|-----------|
-|DDL        |[Clique aqui](https://seulinkaqui.com)|
+|DDL        |[Clique aqui](https://github.com/igoharaujo/Projeto_Streaming/blob/main/2_script/3-viws.sql)|
 |Dados      |[Clique aqui](https://seulinkaqui.com)|
 |Views      |[Clique aqui](https://seulinkaqui.com)|
 |Funções    |[Clique aqui](https://seulinkaqui.com)|
