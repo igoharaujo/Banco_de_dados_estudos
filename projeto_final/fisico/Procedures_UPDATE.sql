@@ -264,7 +264,6 @@ DELIMITER ;
 
 call sp_update_temporada(101, 'igor do mal', 'o grande poderoso', 2);
 
--- ------------------------
 
 # EPISODIO
 DELIMITER $$
@@ -296,7 +295,81 @@ END $$
 DELIMITER ;
 
 
+#ENDEREÇO
+DELIMITER $$
+CREATE PROCEDURE sp_update_endereco(
+	  e_id_endereco INT
+	, e_numero SMALLINT
+	, e_endereco VARCHAR(45)
+	, e_cep CHAR(8)
+	, e_cidade VARCHAR(58)
+	, e_id_pais INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM pais WHERE id_pais = e_id_pais;
+    
+    IF e_endereco IS NULL OR e_cep IS NULL OR e_cidade IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF e_endereco = '' OR e_cidade = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pais" não encontrado';
+    ELSE
+        UPDATE endereco
+        SET
+            numero = e_numero,
+            endereco = e_endereco,
+            cep = e_cep,
+            cidade = e_cidade,
+            id_pais = e_id_pais
+        WHERE
+            id_endereco = e_id_endereco;
+    END IF;
+END $$
+DELIMITER ;
+drop procedure sp_update_endereco;
 
+call sp_update_endereco(1, 22,'rua do ceu', '64545664','calorada', 5);
+
+#PESSOA
+DELIMITER $$
+CREATE PROCEDURE sp_update_pessoa(
+	  p_id_pessoa INT
+	, p_nome VARCHAR(32)
+	, p_sobrenome VARCHAR(45)
+	, p_senha VARCHAR(32)
+	, p_email VARCHAR(100)
+	, p_status VARCHAR(45)
+	, p_avaliacao ENUM('1','2','3','4','5')
+	, p_dt_nascimento DATE
+	, p_id_endereco INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM endereco WHERE id_endereco = p_id_endereco;
+    
+    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF LENGTH(p_senha) < 8 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
+    ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
+    ELSE
+        UPDATE pessoa
+        SET
+            nome = p_nome,
+            sobrenome = p_sobrenome,
+            senha = p_senha,
+            email = p_email,
+            status = p_status,
+            avaliacao = p_avaliacao,
+            dt_nascimento = p_dt_nascimento,
+            id_endereco = p_id_endereco
+        WHERE
+            id_pessoa = p_id_pessoa;
+    END IF;
+END $$
+DELIMITER ;
 
 
 

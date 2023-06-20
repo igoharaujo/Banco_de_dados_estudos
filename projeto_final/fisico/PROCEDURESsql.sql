@@ -378,6 +378,68 @@ CREATE PROCEDURE sp_insert_episodio(
     DELIMITER ;
     
     
+    -- ---------------------------
+
+-- ENDEREÇO
+DELIMITER $$
+CREATE PROCEDURE sp_insert_endereco(
+	  e_numero SMALLINT
+	, e_endereco VARCHAR(45)
+	, e_cep CHAR(8)
+	, e_cidade VARCHAR(58)
+	, e_id_pais INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM pais WHERE id_pais = e_id_pais;
+    
+    IF e_endereco IS NULL OR e_cep IS NULL OR e_cidade IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF e_endereco = '' OR e_cep = '' OR e_cidade = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+	ELSEIF e_cep REGEXP '[a-zA-Z]' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] cep invalido'; -- não aceitará nenhuma letra
+    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pais" não encontrado';
+    ELSE 
+    INSERT INTO endereco 
+		(numero, endereco, cep, cidade, id_pais)
+	VALUES (e_numero, e_endereco, e_cep, e_cidade, e_id_pais);
+    
+    END IF;
+END $$
+DELIMITER ;
+
+drop procedure sp_insert_endereco;
+    
+call sp_insert_endereco(22,'rua do ceu', '645664','caoufhja', 5);
+
+#PESSOA
+DELIMITER $$
+CREATE PROCEDURE sp_insert_pessoa(
+	  p_nome VARCHAR(32)
+	, p_sobrenome VARCHAR(45)
+	, p_senha VARCHAR(32)
+	, p_email VARCHAR(100)
+	, p_status VARCHAR(45)
+	, p_avaliacao ENUM('1','2','3','4','5')
+	, p_dt_nascimento DATE
+	, p_id_endereco INT
+)
+BEGIN
+    DECLARE id_test INT;
+    SELECT COUNT(*) INTO id_test FROM endereco WHERE id_endereco = p_id_endereco;
+    
+    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_dt_nascimento = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF LENGTH(p_senha) < 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
+    ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
+    ELSE
+        INSERT INTO pessoa 
+			(nome, sobrenome, senha, email, status, avaliacao, dt_nascimento, dt_cadastro, id_endereco)
+        VALUES (p_nome, p_sobrenome, p_senha, p_email, p_status, p_avaliacao, p_dt_nascimento, CURDATE(), p_id_endereco);
+    END IF;
+END $$
+DELIMITER ;
+
+CALL sp_insert_pessoa('IGORLINDÃO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2024-14-12', 3);
     
     
 
