@@ -24,7 +24,7 @@ BEGIN
 END $$
 DELIMITER ;
 call sp_update_pais(3, 'arroz', '+4787');
-opi09iopikopií
+
 
 -- CLASSIFICAÇÃO
 DELIMITER $$
