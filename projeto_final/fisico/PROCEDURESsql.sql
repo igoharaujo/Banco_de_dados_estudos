@@ -1,6 +1,6 @@
--- ------------------------- PROCEDURES ------------------------------
+# -------------- PROCEDURES ----------------
 
-# ----------------- INSERTS -----------------
+# --------------- INSERTS -----------------
 
 -- PAÍS
 DELIMITER $$
@@ -26,7 +26,6 @@ CREATE PROCEDURE sp_insert_pais(
     END $$
 DELIMITER ;
 
-
 -- CLASSIFICAÇÃO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_classificacao(
@@ -35,7 +34,7 @@ CREATE PROCEDURE sp_insert_classificacao(
     )
     
 	BEGIN
-	IF cla_idade IS NULL OR cod_pais IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
+	IF cla_idade IS NULL OR cla_descricao IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
 	ELSEIF cla_idade = '' OR cla_descricao = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
 	ELSEIF cla_descricao NOT LIKE '%___%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] menos de 3 caracteres';
     ELSE
@@ -48,8 +47,7 @@ CREATE PROCEDURE sp_insert_classificacao(
     
     END $$
     DELIMITER ;
-
-
+    
 -- ATOR
 DELIMITER $$
 CREATE PROCEDURE sp_insert_ator(
@@ -74,8 +72,6 @@ CREATE PROCEDURE sp_insert_ator(
     END $$
 DELIMITER ;
 
-CALL sp_insert_ator ('igor', 'Downey Jr.', '2023-05-04', null);
-
 -- IDIOMA
 DELIMITER $$
 CREATE PROCEDURE sp_insert_idioma(i_nome VARCHAR(45))
@@ -93,8 +89,6 @@ CREATE PROCEDURE sp_insert_idioma(i_nome VARCHAR(45))
     
     END $$
     DELIMITER ;
-
-call sp_insert_idioma('test');
 
 
 -- CATEGORIA
@@ -114,10 +108,6 @@ CREATE PROCEDURE sp_insert_categoria(c_nome VARCHAR(45))
     
     END $$
     DELIMITER ;
-
-call sp_insert_categoria('test');
-
-
 
 -- CATALOGO
 DELIMITER $$
@@ -157,9 +147,6 @@ CREATE PROCEDURE sp_insert_catalogo(
     END $$
     DELIMITER ;
 
-call sp_insert_catalogo('test','mafia do barroco',2024, '01:00:00', 5, 10, 2 );
-
-
 -- PAÍS_CATALOGO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_pais_catalogo(
@@ -185,10 +172,6 @@ CREATE PROCEDURE sp_insert_pais_catalogo(
     
     END $$
     DELIMITER ;
-    
-    
-    CALL sp_insert_pais_catalogo(5,18);
-    
 
 -- IDIOMA_CATALOGO
 DELIMITER $$
@@ -216,7 +199,6 @@ CREATE PROCEDURE sp_insert_idioma_catalogo(
     END $$
     DELIMITER ;
     
-    
 -- ATOR_CATALOGO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_ator_catalogo(
@@ -242,8 +224,7 @@ CREATE PROCEDURE sp_insert_ator_catalogo(
     
     END $$
     DELIMITER ;
-    
-
+   
 -- CATEGORIA_CATALOGO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_categoria_catalogo(
@@ -255,7 +236,7 @@ CREATE PROCEDURE sp_insert_categoria_catalogo(
     DECLARE id_test1 INT;
     DECLARE id_test2 INT;
     SELECT count(*) INTO id_test1 FROM categoria where id_categoria = pc_fk_categoria;
-    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalog = pc_fk_catalogo;
+    SELECT count(*) INTO id_test2 FROM catalogo WHERE id_catalogo = pc_fk_catalogo;
     
     IF id_test1 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATEGORIA_´ não encontrado';
     ELSEIF id_test2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´ID_CATALOGO´ não encontrado';
@@ -269,9 +250,6 @@ CREATE PROCEDURE sp_insert_categoria_catalogo(
     
     END $$
     DELIMITER ;
-   
-
-    
     
     -- FILME
 DELIMITER $$
@@ -281,10 +259,10 @@ CREATE PROCEDURE sp_insert_filme(
     )
 	BEGIN
     
-    DECLARE id_test1 INT;
-    SELECT count(*) INTO id_test1 FROM catalogo where id_catalogo = f_fk_catalogo;
+    DECLARE verifica INT;
+    SELECT count(*) INTO verifica FROM catalogo where id_catalogo = f_fk_catalogo;
 
-    IF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_catalogo´ não encontrado';
+    IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_catalogo´ não encontrado';
     ELSE
     
 		INSERT INTO filme
@@ -295,8 +273,8 @@ CREATE PROCEDURE sp_insert_filme(
     
     END $$
     DELIMITER ;
-
     
+
  -- SERIE
 DELIMITER $$
 CREATE PROCEDURE sp_insert_serie(
@@ -319,7 +297,8 @@ CREATE PROCEDURE sp_insert_serie(
     END $$
     DELIMITER ;
     
-    
+
+
 -- TEMPORADA
 DELIMITER $$
 CREATE PROCEDURE sp_insert_temporada(
@@ -333,12 +312,15 @@ CREATE PROCEDURE sp_insert_temporada(
     SELECT count(*) INTO verifica FROM serie where id_serie = t_fk_serie;
 
     IF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREING KEY] valor ´id_serie´ não encontrado';
+    ELSEIF t_titulo IS NULL OR t_descricao IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null ';
+	ELSEIF t_titulo = '' OR t_descricao = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF t_titulo NOT LIKE '%__%' OR t_descricao NOT LIKE '%__%' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] qtd de caracteres invalida';
     ELSE
     
 		INSERT INTO temporada
 			(titulo, descricao, id_serie)
 		VALUES
-			(t_titulo, t_descricao, t_fk_serie);
+			(LOWER(t_titulo), LOWER(t_descricao), t_fk_serie);
 	END IF;
     
     END $$
@@ -371,17 +353,14 @@ CREATE PROCEDURE sp_insert_episodio(
 		INSERT INTO episodio
 			(nome, duracao, id_temporada, id_serie)
 		VALUES
-			(e_nome, e_duracao, e_fk_temporada, e_fk_serie);
+			(LOWER(e_nome), e_duracao, e_fk_temporada, e_fk_serie);
 	END IF;
     
     END $$
     DELIMITER ;
     
-    
-    -- ---------------------------
-
--- ENDEREÇO
-DELIMITER $$
+-- ENDERECO
+    DELIMITER $$
 CREATE PROCEDURE sp_insert_endereco(
 	  e_numero SMALLINT
 	, e_endereco VARCHAR(45)
@@ -395,20 +374,14 @@ BEGIN
     
     IF e_endereco IS NULL OR e_cep IS NULL OR e_cidade IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
     ELSEIF e_endereco = '' OR e_cep = '' OR e_cidade = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
-	ELSEIF e_cep REGEXP '[a-zA-Z]' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] cep invalido'; -- não aceitará nenhuma letra
+    ELSEIF LENGTH(e_cep) <> 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] CEP inválido';
     ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pais" não encontrado';
-    ELSE 
-    INSERT INTO endereco 
-		(numero, endereco, cep, cidade, id_pais)
-	VALUES (e_numero, e_endereco, e_cep, e_cidade, e_id_pais);
-    
+    ELSE
+        INSERT INTO endereco (numero, endereco, cep, cidade, id_pais)
+        VALUES (e_numero, e_endereco, e_cep, e_cidade, e_id_pais);
     END IF;
 END $$
 DELIMITER ;
-
-drop procedure sp_insert_endereco;
-    
-call sp_insert_endereco(22,'rua do ceu', '645664','caoufhja', 5);
 
 -- PESSOA
 DELIMITER $$
@@ -426,23 +399,22 @@ BEGIN
     DECLARE id_test INT;
     SELECT COUNT(*) INTO id_test FROM endereco WHERE id_endereco = p_id_endereco;
     
-    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF p_dt_nascimento >= curdate() THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] data invalida';
-    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
-    ELSEIF LENGTH(p_senha) < 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
-    ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
+    IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF LENGTH(p_senha) < 8 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
+    ELSEIF p_id_endereco IS NOT NULL AND id_test = FALSE THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
     ELSE
-        INSERT INTO pessoa 
-			(nome, sobrenome, senha, email, status, avaliacao, dt_nascimento, dt_cadastro, id_endereco)
-        VALUES (LOWER(p_nome), LOWER(p_sobrenome), p_senha, LOWER(p_email), p_status, p_avaliacao, p_dt_nascimento, CURDATE(), p_id_endereco);
+        INSERT INTO pessoa (nome, sobrenome, senha, email, status, avaliacao, dt_nascimento, dt_cadastro, id_endereco)
+        VALUES (LOWER(p_nome), LOWER(p_sobrenome), p_senha, LOWER(p_email), LOWER(p_status), p_avaliacao, p_dt_nascimento, CURDATE(), p_id_endereco);
     END IF;
 END $$
 DELIMITER ;
 
-CALL sp_insert_pessoa('IGORLINDO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2020-10-12', 3);
-    drop procedure sp_insert_pessoa;
-    
-# FUNCIONARIO
+-- FUNCIONARIO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_funcionario(
 	  f_foto TINYBLOB
@@ -464,7 +436,7 @@ END $$
 DELIMITER ;
 
 
-# PAGAMENTO
+-- PLANO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_plano(
 	  p_valor FLOAT
@@ -477,12 +449,13 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSE
         INSERT INTO plano (valor, descricao)
-        VALUES (p_valor, p_descricao);
+        VALUES (p_valor, LOWER(p_descricao));
     END IF;
 END $$
 DELIMITER ;
 
-# CARTÃO DE CREDITO
+
+-- CARTAO_CREDITO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_cartao_credito(
 	  c_numero VARCHAR(16)
@@ -497,48 +470,108 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSE
         INSERT INTO cartao_credito (numero, dt_vencimento, cod_seguranca, titular)
-        VALUES (c_numero, c_dt_vencimento, c_cod_seguranca, c_titular);
+        VALUES (c_numero, c_dt_vencimento, c_cod_seguranca, LOWER(c_titular));
     END IF;
 END $$
 DELIMITER ;
 
+
+-- TIPO_PAGAMENTO
 
 DELIMITER $$
-CREATE PROCEDURE sp_update_cartao_credito(
-	  c_id_cartao INT
-	, c_numero VARCHAR(16)
-	, c_dt_vencimento DATE
-	, c_cod_seguranca INT
-	, c_titular VARCHAR(100)
+CREATE PROCEDURE sp_insert_tipo_pagamento(
+	  tp_nome VARCHAR(45)
 )
 BEGIN
-    IF c_numero IS NULL OR c_dt_vencimento IS NULL OR c_cod_seguranca IS NULL OR c_titular IS NULL THEN
+    IF tp_nome IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF c_numero = '' OR c_titular = '' THEN
+    ELSEIF tp_nome = '' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSE
-        UPDATE cartao_credito
-        SET
-            numero = c_numero,
-            dt_vencimento = c_dt_vencimento,
-            cod_seguranca = c_cod_seguranca,
-            titular = c_titular
-        WHERE
-            id_cartao = c_id_cartao;
+        INSERT INTO tipo_pagamento (nome)
+        VALUES (LOWER(tp_nome));
     END IF;
 END $$
 DELIMITER ;
 
 
+-- CLIENTE
+
+DELIMITER $$
+CREATE PROCEDURE sp_insert_cliente(
+	  c_nickname VARCHAR(32)
+	, c_dt_vencimento DATE
+	, c_id_plano INT
+	, c_id_pessoa INT
+)
+BEGIN
+    IF c_nickname IS NULL OR c_dt_vencimento IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF c_nickname = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF c_id_pessoa IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] id_pessoa não pode ser null';
+    ELSEIF c_id_plano IS NOT NULL AND NOT EXISTS (SELECT id_plano FROM plano WHERE id_plano = c_id_plano) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_plano não encontrado';
+    ELSE
+        INSERT INTO cliente (nickname, dt_vencimento, id_plano, id_pessoa)
+        VALUES (LOWER(c_nickname), c_dt_vencimento, c_id_plano, c_id_pessoa);
+    END IF;
+END $$
+DELIMITER ;
 
 
+-- PAGAMENTO
+
+DELIMITER $$
+CREATE PROCEDURE sp_insert_pagamento(
+	  p_valor FLOAT
+	, p_forma_pagamento VARCHAR(20)
+	, p_id_cliente INT
+	, p_id_cartao INT
+	, p_id_tipo_pagamento INT
+)
+BEGIN
+    IF p_valor IS NULL OR p_forma_pagamento IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_forma_pagamento = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF p_id_cliente IS NOT NULL AND NOT EXISTS (SELECT id_cliente FROM cliente WHERE id_cliente = p_id_cliente) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cliente não encontrado';
+    ELSEIF p_id_cartao IS NOT NULL AND NOT EXISTS (SELECT id_cartao FROM cartao_credito WHERE id_cartao = p_id_cartao) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cartao não encontrado';
+    ELSEIF p_id_tipo_pagamento IS NOT NULL AND NOT EXISTS (SELECT id_tipo_pagamento FROM tipo_pagamento WHERE id_tipo_pagamento = p_id_tipo_pagamento) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_tipo_pagamento não encontrado';
+    ELSE
+        INSERT INTO pagamento (valor, forma_pagamento, id_cliente, id_cartao, id_tipo_pagamento)
+        VALUES (p_valor, p_forma_pagamento, p_id_cliente, p_id_cartao, p_id_tipo_pagamento);
+    END IF;
+END $$
+DELIMITER ;
 
 
+-- PERFIL
 
-
-
-
-
-
-
+DELIMITER $$
+CREATE PROCEDURE sp_insert_perfil(
+    p_foto BLOB,
+    p_nome VARCHAR(32),
+    p_tipo ENUM('perfil infantil', 'perfil adulto'),
+    p_id_cliente INT
+)
+BEGIN
+    IF p_foto IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo foto não pode ser nulo';
+    ELSEIF p_nome IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo nome não pode ser nulo';
+    ELSEIF p_nome = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo nome não pode ser vazio';
+    ELSEIF p_id_cliente IS NOT NULL AND NOT EXISTS (SELECT id_cliente FROM cliente WHERE id_cliente = p_id_cliente) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cliente não encontrado';
+    ELSE
+        INSERT INTO perfil (foto, nome, tipo, id_cliente)
+        VALUES (p_foto, LOWER(p_nome), p_tipo, p_id_cliente);
+    END IF;
+END $$
+DELIMITER ;
 

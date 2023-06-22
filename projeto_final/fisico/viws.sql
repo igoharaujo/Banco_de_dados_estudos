@@ -27,8 +27,6 @@ LEFT JOIN perfil pf ON pf.id_cliente = c.id_cliente
 LEFT JOIN plano pl ON pl.id_plano = c.id_plano
 GROUP BY p.id_pessoa, tipo_usuario, numero_endereco, endereco, cep, cidade, pais_origem, valor_plano, descricao_plano;
 
- select * from vw_usuario;
-drop view vw_usuario;
  
  -- vw_catalogo -------------------------------------------
  CREATE VIEW vw_catalogo AS
@@ -51,8 +49,6 @@ LEFT JOIN filme f ON c.id_catalogo = f.id_catalogo
 LEFT JOIN serie s ON c.id_catalogo = s.id_catalogo
 LEFT JOIN idioma i ON c.idioma_original = i.id_idioma;
  
- select * from vw_catalogo;
- 
  
  -- vw_episodio -----------------------------------------------------------
  
@@ -67,7 +63,6 @@ LEFT JOIN episodio e ON s.id_serie = e.id_serie
 LEFT JOIN temporada t ON e.id_temporada = t.id_temporada
 LEFT JOIN catalogo c ON c.id_catalogo = s.id_catalogo;
 
-select * from vw_episodio;
 
 -- vw_temporada --------------------------------------------------------------
 
@@ -83,7 +78,6 @@ INNER JOIN serie s ON s.id_serie = t.id_serie
 INNER JOIN catalogo c ON s.id_catalogo = c.id_catalogo
 GROUP BY t.id_temporada, t.titulo, t.descricao;
 
-SELECT * FROM vw_temporada;
 
 -- vw_ator ---------------------------------------------------
 
@@ -97,8 +91,6 @@ INNER JOIN catalogo c ON ac.id_catalogo = c.id_catalogo
 LEFT JOIN filme f ON c.id_catalogo = f.id_catalogo
 LEFT JOIN serie s ON c.id_catalogo = s.id_catalogo
 GROUP BY a.nome;
-
-SELECT * FROM vw_ator;
 
 
 -- vw_pagamento ------------------------------------------
@@ -115,8 +107,6 @@ INNER JOIN plano pl ON pl.id_plano = c.id_plano LEFT JOIN pagamento pa ON pa.id_
 INNER JOIN tipo_pagamento tp ON tp.id_tipo_pagamento = pa.id_tipo_pagamento;
 SELECT * FROM pagamento;
  
-drop view vw_pagamento;
-select * from vw_pagamento;
  -- vw_perfil -------------------------------------------------
 CREATE VIEW vw_perfil AS
 SELECT 'cliente' AS tipo,
@@ -127,33 +117,6 @@ FROM pessoa p
 INNER JOIN cliente c ON c.id_pessoa = p.id_pessoa
 LEFT JOIN perfil pe ON pe.id_cliente = c.id_cliente
 GROUP BY p.nome;
-
-SELECT * FROM vw_perfil;
- 
-
-
-
-
- /*
- SELECT c.titulo, COUNT(t.id_serie) AS temporada
-FROM catalogo c
-INNER JOIN serie s ON s.id_catalogo = c.id_catalogo
-LEFT JOIN temporada t ON t.id_serie = s.id_serie
-GROUP BY c.titulo;
-
- 
-select * from serie;
- 
-SELECT s.id_serie, c.titulo, SEC_TO_TIME(SUM(TIME_TO_SEC(e.duracao))) AS duracao_total
-FROM catalogo c
-INNER JOIN serie s ON c.id_catalogo = s.id_catalogo
-LEFT JOIN temporada t ON s.id_serie = t.id_serie
-LEFT JOIN episodio e ON t.id_temporada = e.id_temporada
-GROUP BY s.id_serie, c.titulo;
-*/
-
-
-
 
 
 

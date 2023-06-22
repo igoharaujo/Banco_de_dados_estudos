@@ -2,7 +2,6 @@ CREATE DATABASE IF NOT EXISTS streaming
 COLLATE utf8mb4_general_ci
 CHARSET utf8mb4;
 
-
 use streaming;
 
 CREATE TABLE IF NOT EXISTS pais(
@@ -194,8 +193,3 @@ CREATE TABLE IF NOT EXISTS perfil(
     id_cliente INT,
 CONSTRAINT fk_id_cliente_perfil FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)
 )auto_increment = 1;
-
-
-
--- drop database streamer;
--- oi igor

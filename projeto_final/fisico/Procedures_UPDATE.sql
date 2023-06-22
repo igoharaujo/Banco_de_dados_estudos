@@ -245,32 +245,43 @@ DELIMITER ;
 
 # EPISODIO
 DELIMITER $$
-CREATE PROCEDURE sp_insert_episodio(
-    e_nome VARCHAR(100),
-    e_duracao TIME,
-    e_fk_temporada INT,
-    e_fk_serie INT
+CREATE PROCEDURE sp_update_episodio(
+    p_id_episodio INT,
+    p_nome VARCHAR(100),
+    p_duracao TIME,
+    p_id_temporada INT,
+    p_id_serie INT
 )
 BEGIN
     DECLARE verifica_temporada INT;
     DECLARE verifica_serie INT;
-    SELECT COUNT(*) INTO verifica_temporada FROM temporada WHERE id_temporada = e_fk_temporada;
-    SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = e_fk_serie;
     
-    IF verifica_temporada = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_temporada não encontrado';
-    ELSEIF verifica_serie = 0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
-    ELSEIF e_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo nulo';
-    ELSEIF e_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo vazio';
-    ELSEIF LENGTH(e_nome) < 3 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Menos de 3 caracteres';
-    ELSEIF e_duracao <= '00:00:00' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Duração inválida';
+    SELECT COUNT(*) INTO verifica_temporada FROM temporada WHERE id_temporada = p_id_temporada;
+    SELECT COUNT(*) INTO verifica_serie FROM serie WHERE id_serie = p_id_serie;
+    
+    IF verifica_temporada = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_temporada não encontrado';
+    ELSEIF verifica_serie = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] Valor de id_serie não encontrado';
+    ELSEIF p_nome IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo "nome" nulo';
+    ELSEIF p_nome = '' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo "nome" vazio';
+    ELSEIF LENGTH(p_nome) < 3 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Campo "nome" com menos de 3 caracteres';
+    ELSEIF p_duracao <= '00:00:00' THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] Duração inválida';
     ELSE
-        INSERT INTO episodio
-            (nome, duracao, id_temporada, id_serie)
-        VALUES
-            (LOWER(e_nome), e_duracao, e_fk_temporada, e_fk_serie);
+        UPDATE episodio
+        SET nome = LOWER(p_nome),
+            duracao = p_duracao,
+            id_temporada = p_id_temporada,
+            id_serie = p_id_serie
+        WHERE id_episodio = p_id_episodio;
     END IF;
 END $$
 DELIMITER ;
+
 
 #ENDEREÇO
 DELIMITER $$
@@ -491,7 +502,7 @@ BEGIN
     ELSE
         UPDATE perfil
         SET foto = p_foto,
-            nome = p_nome,
+            nome = LOWER(p_nome),
             tipo = p_tipo,
             id_cliente = p_id_cliente
         WHERE id_perfil = p_id_perfil;
