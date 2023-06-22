@@ -1,3 +1,7 @@
+# -------------- PROCEDURES ----------------
+
+# --------------- INSERTS -----------------
+
 -- PAÍS
 DELIMITER $$
 CREATE PROCEDURE sp_update_pais(
@@ -23,8 +27,6 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-call sp_update_pais(3, 'arroz', '+4787');
-
 
 -- CLASSIFICAÇÃO
 DELIMITER $$
@@ -49,9 +51,6 @@ CREATE PROCEDURE sp_update_classificacao(
 	END IF;
 END $$
 DELIMITER ;
-
-CALL sp_update_classificacao(1, '21', 'para lindos');
-
 
 -- ATOR
 DELIMITER $$
@@ -83,8 +82,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-call sp_update_ator(300,'igor', 'lindão', '2020-05-05', null);
-
 -- IDIOMA
 DELIMITER $$
 CREATE PROCEDURE sp_update_idioma(i_id_idioma INT, i_nome VARCHAR(45))
@@ -103,10 +100,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-call sp_update_idioma(5, 'i');
-select * from idioma;
-
-
 -- CATEGORIA
 DELIMITER $$
 CREATE PROCEDURE sp_update_categoria(c_id_categoria INT, c_nome VARCHAR(45))
@@ -124,8 +117,6 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-call sp_update_categoria(1, 'm');
-
 
 -- CATALOGO
 DELIMITER $$
@@ -172,12 +163,7 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
-
-call sp_update_catalogo(1, 'IGOR', 'MACACADA LOKA', 2023, '01:00:00',5,3,2);
-select * from catalogo;
-
 -- -------------------------------------------------
-
 -- FILME
 DELIMITER $$
 CREATE PROCEDURE sp_update_filme(
@@ -203,8 +189,6 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
-call sp_update_filme(1,5,100);
-
 
 -- SERIE
 DELIMITER $$
@@ -229,8 +213,6 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
-
-CALL sp_update_serie(11,10);
 
 -- TEMPORADA
 DELIMITER $$
@@ -261,10 +243,6 @@ BEGIN
 END $$
 DELIMITER ;
 
-
-call sp_update_temporada(101, 'igor do mal', 'o grande poderoso', 2);
-
-
 # EPISODIO
 DELIMITER $$
 CREATE PROCEDURE sp_insert_episodio(
@@ -293,7 +271,6 @@ BEGIN
     END IF;
 END $$
 DELIMITER ;
-
 
 #ENDEREÇO
 DELIMITER $$
@@ -327,8 +304,6 @@ END $$
 DELIMITER ;
 drop procedure sp_update_endereco;
 
-call sp_update_endereco(1, 22,'rua do ceu', '64545664','calorada', 5);
-
 -- PESSOA
 DELIMITER $$
 CREATE PROCEDURE sp_update_pessoa(
@@ -344,21 +319,24 @@ CREATE PROCEDURE sp_update_pessoa(
 )
 BEGIN
     DECLARE id_test INT;
-    SELECT COUNT(*) INTO id_test FROM pessoa WHERE id_pessoa = p_id_pessoa;
+    DECLARE id_test2 INT;
+    SELECT id_pessoa INTO id_test FROM pessoa WHERE id_pessoa = p_id_pessoa;
+    SELECT COUNT(*) INTO id_test2 FROM endereco WHERE id_endereco = p_id_endereco;
     
     IF p_nome IS NULL OR p_sobrenome IS NULL OR p_senha IS NULL OR p_email IS NULL OR p_dt_nascimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
     ELSEIF p_dt_nascimento >= curdate() THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] data invalida';
     ELSEIF p_nome = '' OR p_sobrenome = '' OR p_senha = '' OR p_email = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSEIF LENGTH(p_senha) < 8 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] senha deve ter no mínimo 8 caracteres';
-    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
+    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
+    ELSEIF id_test2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_endereco" não encontrado';
     ELSE
         UPDATE pessoa
         SET
-            nome = p_nome,
-            sobrenome = p_sobrenome,
+            nome = LOWER(p_nome),
+            sobrenome = LOWER(p_sobrenome),
             senha = p_senha,
-            email = p_email,
-            status = p_status,
+            email = LOWER(p_email),
+            status = LOWER(p_status),
             avaliacao = p_avaliacao,
             dt_nascimento = p_dt_nascimento,
             id_endereco = p_id_endereco
@@ -368,9 +346,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-CALL sp_update_pessoa(100, 'IGORLINDO','FODAO','FHJKHDHF54', 'IGIF2KFDKSJFGMAI.COM', 'ATIVO', 4, '2020-10-12', 3);
-
-# FUNCIONARIO
+-- FUNCIONARIO
 DELIMITER $$
 CREATE PROCEDURE sp_update_funcionario(
 	  f_id_funcionario INT
@@ -381,10 +357,8 @@ BEGIN
     DECLARE id_test INT;
     SELECT COUNT(*) INTO id_test FROM pessoa WHERE id_pessoa = f_id_pessoa;
     
-    IF f_id_pessoa IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF id_test = FALSE THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
+    IF f_id_pessoa IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF id_test = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
     ELSE
         UPDATE funcionario
         SET
@@ -396,8 +370,7 @@ BEGIN
 END $$
 DELIMITER ;
 
-
-# PAGAMENTO
+-- PAGAMENTO
 DELIMITER $$
 CREATE PROCEDURE sp_update_plano(
 	  p_id_plano INT
@@ -405,10 +378,8 @@ CREATE PROCEDURE sp_update_plano(
 	, p_descricao VARCHAR(100)
 )
 BEGIN
-    IF p_valor IS NULL OR p_descricao IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
-    ELSEIF p_descricao = '' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    IF p_valor IS NULL OR p_descricao IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_descricao = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
     ELSE
         UPDATE plano
         SET
@@ -420,14 +391,113 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- TIPO_PAGAMENTO
+DELIMITER $$
+CREATE PROCEDURE sp_update_tipo_pagamento(
+	  tp_id_tipo_pagamento INT
+	, tp_nome VARCHAR(45)
+)
+BEGIN
+    IF tp_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF tp_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSE
+        UPDATE tipo_pagamento
+        SET nome = tp_nome
+        WHERE id_tipo_pagamento = tp_id_tipo_pagamento;
+    END IF;
+END $$
+DELIMITER ;
 
-bjkbkjlnhjkhljkhjlkghlghjbg
+-- CLIENTE
+DELIMITER $$
+CREATE PROCEDURE sp_update_cliente(
+	  c_id_cliente INT
+	, c_nickname VARCHAR(32)
+	, c_dt_vencimento DATE
+	, c_id_plano INT
+	, c_id_pessoa INT
+)
+BEGIN
+	
+	DECLARE verifica INT;
+	DECLARE verifica2 INT;
+    SELECT count(*) INTO verifica FROM pessoa WHERE id_pessoa = c_id_pessoa;
+    SELECT count(*) INTO verifica2 FROM plano WHERE id_plano = c_id_plano;
 
+    IF c_nickname IS NULL OR c_dt_vencimento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF c_nickname = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF verifica = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_pessoa" não encontrado';
+     ELSEIF verifica2 = FALSE THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor de "id_plano" não encontrado';
+    ELSEIF c_id_plano IS NOT NULL AND NOT EXISTS (SELECT id_plano FROM plano WHERE id_plano = c_id_plano) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_plano não encontrado';
+    ELSE
+        UPDATE cliente
+        SET
+            nickname = c_nickname,
+            dt_vencimento = c_dt_vencimento,
+            id_plano = c_id_plano,
+            id_pessoa = c_id_pessoa
+        WHERE
+            id_cliente = c_id_cliente;
+    END IF;
+END $$
+DELIMITER ;
 
+-- PAGAMENTO
 
+DELIMITER $$
+CREATE PROCEDURE sp_update_pagamento(
+	  p_id_pagamento INT
+	, p_valor FLOAT
+	, p_forma_pagamento VARCHAR(20)
+	, p_id_cliente INT
+	, p_id_cartao INT
+	, p_id_tipo_pagamento INT
+)
+BEGIN
+    IF p_valor IS NULL OR p_forma_pagamento IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo null';
+    ELSEIF p_forma_pagamento = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo vazio';
+    ELSEIF p_id_cliente IS NOT NULL AND NOT EXISTS (SELECT id_cliente FROM cliente WHERE id_cliente = p_id_cliente) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cliente não encontrado';
+    ELSEIF p_id_cartao IS NOT NULL AND NOT EXISTS (SELECT id_cartao FROM cartao_credito WHERE id_cartao = p_id_cartao) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cartao não encontrado';
+    ELSEIF p_id_tipo_pagamento IS NOT NULL AND NOT EXISTS (SELECT id_tipo_pagamento FROM tipo_pagamento WHERE id_tipo_pagamento = p_id_tipo_pagamento) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_tipo_pagamento não encontrado';
+    ELSE
+        UPDATE pagamento
+        SET
+            valor = p_valor,
+            forma_pagamento = p_forma_pagamento,
+            id_cliente = p_id_cliente,
+            id_cartao = p_id_cartao,
+            id_tipo_pagamento = p_id_tipo_pagamento
+        WHERE
+            id_pagamento = p_id_pagamento;
+    END IF;
+END $$
+DELIMITER ;
 
+-- PERFIL
 
-
+DELIMITER $$
+CREATE PROCEDURE sp_update_perfil(
+    p_id_perfil INT,
+    p_foto BLOB,
+    p_nome VARCHAR(32),
+    p_tipo ENUM('perfil infantil', 'perfil adulto'),
+    p_id_cliente INT
+)
+BEGIN
+    IF p_foto IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo foto não pode ser nulo';
+    ELSEIF p_nome IS NULL THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo nome não pode ser nulo';
+    ELSEIF p_nome = '' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[INVALIDO] campo nome não pode ser vazio';
+    ELSEIF p_id_cliente IS NOT NULL AND NOT EXISTS (SELECT id_cliente FROM cliente WHERE id_cliente = p_id_cliente) THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[FOREIGN KEY] valor id_cliente não encontrado';
+    ELSE
+        UPDATE perfil
+        SET foto = p_foto,
+            nome = p_nome,
+            tipo = p_tipo,
+            id_cliente = p_id_cliente
+        WHERE id_perfil = p_id_perfil;
+    END IF;
+END $$
+DELIMITER ;
 
 
 
