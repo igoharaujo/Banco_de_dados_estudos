@@ -87,7 +87,6 @@ VALUES
 (1, 'DeuBug', 'm',1,0,1,1),
 (2, 'BitBug', 'f',1,0,1,2);
 
-#update tb_personagem set id_usuario = 2 where id_personagem = 2;
 
 INSERT INTO tb_habilidade
 (id, nome, descricao)
@@ -107,12 +106,5 @@ VALUES
 
 
 
-
-
-
-
-select usuario.nome as usuario, usuario.nickname as nickname, personagem.nome as persongem, personagem.nivel as nivel, personagem.experiencia as experiencia
-from tb_usuario as usuario left join tb_personagem as personagem
-on usuario.id = personagem.id_usuario;
 
 
